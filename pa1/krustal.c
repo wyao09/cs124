@@ -117,18 +117,18 @@ int krustal_rand_wts (int numpoints)
       // IMPLEMENT ME: 
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
-      {
-	  	if (i < j)
+	{
+	  if (i < j)
 	    {
-	      	w = ((double)rand()/ (double)(RAND_MAX));
+	      w = ((double)rand()/ (double)(RAND_MAX));
 	  	  
-			edgelist[k].v_1 = i;
-			edgelist[k].v_2 = j;
-			edgelist[k].weight = w;
+	      edgelist[k].v_1 = i;
+	      edgelist[k].v_2 = j;
+	      edgelist[k].weight = w;
 			
-			k++;
-    	}
-      }
+	      k++;
+	    }
+	}
     }
     
   //Sort edges
@@ -165,15 +165,15 @@ int krustal_rand_points(int numpoints, int dimension)
   for (i=0; i<numpoints; i++)
     {
       for (j=0; j<numpoints; j++)
-	  {
+	{
 	  if (i < j)
 	    {
 	      dist = 0.0;
 	      for (k=0; k<dimension; k++)
-	      {
-	      	tmp = points[i][k]-points[j][k]; 
-			dist += pow(tmp,2);
-		  }
+		{
+		  tmp = points[i][k]-points[j][k]; 
+		  dist += pow(tmp,2);
+		}
 	      dist = dist/k;
 	      dist = pow(dist, (1.0/k));
 	      
@@ -184,7 +184,7 @@ int krustal_rand_points(int numpoints, int dimension)
 	      l++;
 	      printf("%d %d - %f\n",i,j,dist);
 	    }
-	  }
+	}
     }
 }
 
