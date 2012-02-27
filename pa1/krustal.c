@@ -16,11 +16,12 @@
 #include "dj_set.h"
 
 struct edge {
-	int v_1;
-	int v_2;
-	double weight;
-	struct edge *prev;
-	struct edge *next;
+  // QUESTION: are v_1 and v_2 necessary? can we just use prev->id?
+  int v_1;
+  int v_2;
+  double weight;
+  struct edge *prev;
+  struct edge *next;
 };
 
 typedef struct edge edge;
@@ -34,11 +35,15 @@ int fact(int x)
 	return j;		
 }
 
+// 
+edge * sort(edge *edgelist, int length){
+  
+}
 
 //This is the 0 dimension case with random weighted edges between each node
 int krustal_rand_wts (int numpoints)
 {
-  //Use integer values for faster run time?
+  // QUESTION: Use integer values for faster run time?
   double weights[numpoints][numpoints];
   int numedges = fact(numpoints)/(fact(numpoints-2)*2);
   
@@ -55,6 +60,7 @@ int krustal_rand_wts (int numpoints)
       int k = i*numpoints+j;
       double w;
       
+      // IMPLEMENT ME: 
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
       {
@@ -67,6 +73,7 @@ int krustal_rand_wts (int numpoints)
 	  		tmp->v_2 = j;
 	  		tmp->weight = w;
 	  		
+			// Prepend
 	  		if (edgelist != NULL)
 	  			edgelist->prev = tmp;
 	  		tmp->next = edgelist;
