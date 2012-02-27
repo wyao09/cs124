@@ -47,7 +47,8 @@ int krustal_rand_wts (int numpoints)
     
   int i, j;
   srand(time(NULL)); //seeds random generator with current system time
-    
+   
+  // Mark-Set
   for (i=0; i<numpoints; i++)
     {
       int k = i*numpoints+j;
