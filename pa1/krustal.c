@@ -46,7 +46,7 @@ int fact(int x)
   return j;		
 }
 
-void bottom_up_merge(edge A[], edge B[], int left, int right, int end){
+void bottom_up_merge(edge *A, edge *B, int left, int right, int end){
   int i0 = left;
   int i1 = right;
   int j;
@@ -67,9 +67,16 @@ void bottom_up_merge(edge A[], edge B[], int left, int right, int end){
 
 void bottom_up_sort(edge *sorted, edge *work, int n){
   int width;
+  int i;
+
+  // Initial copy work to sorted
+  for (i = 0; i < n; i++){
+    //printf("%d weighs %f\n", i, work[i].weight);
+    sorted[i] = work[i];
+  }
+
   // Make successively longer sorted runs of length 2, 4, 8, 16...
   for (width = 1; width < n; width = width << 1){
-    int i;
     // sorted is full of runs of length width
     for (i = 0; i < n; i = i + (width << 1)){
       /* merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[] */
@@ -79,6 +86,7 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
 
     // Copy work to sorted
     for (i = 0; i < n; i++){
+      //printf("%d weighs %f\n", i, work[i].weight);
       sorted[i] = work[i];
     }
   }
@@ -124,8 +132,6 @@ int krustal_rand_wts (int numpoints)
     }
     
   //Sort edges
-  print_list(edgelist, numedges);
-  printf("\n");
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
   print_list(sorted, numedges);  
