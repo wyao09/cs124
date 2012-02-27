@@ -206,6 +206,30 @@ int krustal_rand_points(int numpoints, int dimension)
 	    }
 	}
     }
+    
+  //Sort edges
+  edge *sorted = (edge *)malloc(numedges*sizeof(edge));
+  bottom_up_sort(sorted, edgelist, numedges);
+  print_list(sorted, numedges);  
+  //for edges in increasing order
+  
+  int v1, v2;
+  double wt;
+  double total_weight = 0;
+  
+  for (i=0; i<numedges; i++)
+  {
+  	v1 = edgelist[i].v_1;
+  	v2 = edgelist[i].v_2;
+  	wt = edgelist[i].weight;
+  	
+  	if (find(vertices[v1]) != find(vertices[v2]))
+  	{
+  		printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
+  		total_weight += wt;
+  		dj_union(vertices[v1],vertices[v2]);
+  	}
+  }
 }
 
 int main (int argc, char **argv)
