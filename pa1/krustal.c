@@ -15,6 +15,8 @@
 #include <math.h>
 #include "dj_set.h"
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 struct edge {
   int v_1;
   int v_2;
@@ -60,11 +62,10 @@ edge * bottom_up_sort(edge sorted[], edge work[], int n){
     for (i = 0; i < n; i = i + (width << 1)){
       /* merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[] */
       /*  or copy A[i:n-1] to B[] ( if(i+width >= n) ) */
-      bottom_up_merge(sorted, work, i, min(i+width, n), min(i+2*width, n));
+      bottom_up_merge(sorted, work, i, MIN(i+width, n), MIN(i+2*width, n));
     }
 
     // Copy work to sorted
-    CopyArray(sorted, work, n);
     for (i = 0; i < n; i++){
       sorted[i] = work[i];
     }
