@@ -119,6 +119,8 @@ int krustal_rand_wts (int numpoints)
 			edgelist[k].v_1 = i;
 			edgelist[k].v_2 = j;
 			edgelist[k].weight = w;
+			
+			printf("%d, %d - %f\n",edgelist[k].v_1,edgelist[k].v_2,edgelist[k].weight);
     	}
       }
     }
