@@ -32,10 +32,45 @@ int fact(int x)
   return j;		
 }
 
-// 
-edge * sort(edge *edgelist){
-  
+edge * bottom_up_sort(edge sorted[], edge work[], int n){
+  int width;
+  // Make successively longer sorted runs of length 2, 4, 8, 16...
+  for (width = 1; width < n; width = width << 1){
+    int i;
+    // sorted is full of runs of length width
+    for (i = 0; i < n; i = i + (width << 1)){
+      /* merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[] */
+      /*  or copy A[i:n-1] to B[] ( if(i+width >= n) ) */
+      bottom_up_merge(sorted, work, i, min(i+width, n), min(i+2*width, n));
+    }
+
+    // Copy work to sorted
+    CopyArray(sorted, work, n);
+    for (i = 0; i < n; i++){
+      sorted[i] = work[i]
+    }
+  }
 }
+
+edge * bottom_up_merge(edge A[], edge B[], int left, int right, int end){
+  int i0 = left;
+  int i1 = right;
+  int j;
+ 
+  // while there are elements on either side of lists
+  for (j = left; j < end; j++){
+    // if left list head exists and is <= existing right list head
+    if (i0 < right && (i1 >= end || A[i0] <= A[i1])){
+      B[j] = A[i0];
+      i0 += 1;
+    }
+    else{
+      B[j] = A[i1];
+      i1 += 1;
+    }
+  }
+}
+
 
 //This is the 0 dimension case with random weighted edges between each node
 int krustal_rand_wts (int numpoints)
