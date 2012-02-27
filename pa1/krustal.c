@@ -14,36 +14,88 @@
 #include <time.h>
 #include "dj_set.h"
 
+struct edge {
+	int v_1;
+	int v_2;
+	double weight;
+	struct edge *prev;
+	struct edge *next;
+};
+
+typedef struct edge edge;
+
+int fact(int x)
+{
+	int i;
+	int j=1;
+	for (i=x; i>1; i--)
+		j = j*i;
+	return j;		
+}
+
+
 //This is the 0 dimension case with random weighted edges between each node
 int krustal_rand_wts (int numpoints)
 {
   //Use integer values for faster run time?
   double weights[numpoints][numpoints];
+  int numedges = fact(numpoints)/(fact(numpoints-2)*2);
+  
   node *vertices[numpoints];
+  edge *edgelist = NULL;
+  edge *tmp;
     
   int i, j;
   srand(time(NULL)); //seeds random generator with current system time
     
   for (i=0; i<numpoints; i++)
     {
+      int k = i*numpoints+j;
+      double w;
+      
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
       {
       	if (i < j)
       	{
-	  		weights[i][j] = ((double)rand()/ (double)(RAND_MAX));
-	  		weights[j][i] = weights[i][j];
+	  		w = ((double)rand()/ (double)(RAND_MAX));
+	  		
+	  		tmp = (edge *) malloc(sizeof(edge));
+	  		tmp->v_1 = i;
+	  		tmp->v_2 = j;
+	  		tmp->weight = w;
+	  		
+	  		if (edgelist != NULL)
+	  			edgelist->prev = tmp;
+	  		tmp->next = edgelist;
+	  		edgelist = tmp;
 	  	}
-	  	if (i==j)
-	  		weights[i][j] = 0;
-	  	printf("%f\t",weights[i][j]);
 	  }
-	  printf("\n");
     }
+    
+  tmp = edgelist;
+  while (tmp != NULL)
+  {
+  	printf("(%d, %d) - %f\n",tmp->v_1, tmp->v_2, tmp->weight);
+  	tmp = tmp->next;
+  }
     
   //Sort edges
     
   //for edges in increasing order
+}
+
+int krustal_rand_points(int numpoints, int dimension)
+{
+	double points[numpoints][dimension];
+	int i, j;
+	srand(time(NULL));
+	
+	for (i=0; i<numpoints; i++)
+	{
+		for (j=0; j<dimensions; j++)
+			points[i][j] = ((double)rand()/ (double)(RAND_MAX));
+	}
 }
 
 int main (int argc, char **argv)
