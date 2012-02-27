@@ -16,12 +16,9 @@
 #include "dj_set.h"
 
 struct edge {
-  // QUESTION: are v_1 and v_2 necessary? can we just use prev->id?
   int v_1;
   int v_2;
   double weight;
-  struct edge *prev;
-  struct edge *next;
 };
 
 typedef struct edge edge;
@@ -48,10 +45,9 @@ int krustal_rand_wts (int numpoints)
   int numedges = fact(numpoints)/(fact(numpoints-2)*2);
   
   node *vertices[numpoints];
-  edge edgelist[];
-  edge *tmp;
+  edge edgelist[fact(numpoints-1)];
     
-  int i, j;
+  int i, j, k;
   srand(time(NULL)); //seeds random generator with current system time
    
   // Mark-Set
@@ -63,30 +59,17 @@ int krustal_rand_wts (int numpoints)
       // IMPLEMENT ME: 
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
-	{
-	  if (i < j)
+      {
+	  	if (i < j)
 	    {
-	      w = ((double)rand()/ (double)(RAND_MAX));
-	  		
-	      tmp = (edge *) malloc(sizeof(edge));
-	      tmp->v_1 = i;
-	      tmp->v_2 = j;
-	      tmp->weight = w;
-	  		
-	      // Prepend
-	      if (edgelist != NULL)
-		edgelist->prev = tmp;
-	      tmp->next = edgelist;
-	      edgelist = tmp;
-	    }
-	}
-    }
-    
-  tmp = edgelist;
-  while (tmp != NULL)
-    {
-      printf("(%d, %d) - %f\n",tmp->v_1, tmp->v_2, tmp->weight);
-      tmp = tmp->next;
+	      	w = ((double)rand()/ (double)(RAND_MAX));
+	  	  	k = i*numpoints+j;
+	  	  
+			edgelist[k].v_1 = i;
+			edgelist[k].v_2 = j;
+			edgelist[k].weight = w;
+    	}
+      }
     }
     
   //Sort edges
@@ -99,11 +82,10 @@ int krustal_rand_points(int numpoints, int dimension)
   double points[numpoints][dimension];
   node *vertices[numpoints];
 	
-  edge *edgelist = NULL;
-  edge *tmp;
+  edge edgelist[fact(numpoints-1)];
 	
   int i, j, k;
-  double dist;
+  double dist, tmp;
 	
   srand(time(NULL));
 	
@@ -121,17 +103,24 @@ int krustal_rand_points(int numpoints, int dimension)
   for (i=0; i<numpoints; i++)
     {
       for (j=0; j<numpoints; j++)
-	{
+	  {
 	  if (i < j)
 	    {
-	      dist = 0;
+	      dist = 0.0;
 	      for (k=0; k<dimension; k++)
-		dist += pow((points[j][k] - points[i][k]),2);
+	      {
+	      	tmp = points[i][k]-points[j][k]; 
+			dist += pow(tmp,2);
+		  }
 	      dist = dist/k;
 	      dist = pow(dist, (1.0/k));
+	      
+	      edgelist[i*numpoints+j].v_1 = i;
+	      edgelist[i*numpoints+j].v_2 = j;
+	      edgelist[i*numpoints+j].weight = dist;
 	      printf("%d %d - %f\n",i,j,dist);
 	    }
-	}
+	  }
     }
 }
 
