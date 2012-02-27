@@ -25,6 +25,19 @@ struct edge {
 
 typedef struct edge edge;
 
+/* Test Functions START */
+
+void print_list(edge list[]){
+  int n = sizeof(list)/sizeof(edge);
+  int i;
+  for (i = 0; i < n; i++){
+    edge e = list[i];
+    printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e,v_2);
+  }
+}
+
+/* Test Functions END */
+
 int fact(int x)
 {
   int i;
