@@ -32,6 +32,25 @@ int fact(int x)
   return j;		
 }
 
+void bottom_up_merge(edge A[], edge B[], int left, int right, int end){
+  int i0 = left;
+  int i1 = right;
+  int j;
+ 
+  // while there are elements on either side of lists
+  for (j = left; j < end; j++){
+    // if left list head exists and is <= existing right list head
+    if (i0 < right && (i1 >= end || A[i0].weight <= A[i1].weight)){
+      B[j] = A[i0];
+      i0 += 1;
+    }
+    else{
+      B[j] = A[i1];
+      i1 += 1;
+    }
+  }
+}
+
 edge * bottom_up_sort(edge sorted[], edge work[], int n){
   int width;
   // Make successively longer sorted runs of length 2, 4, 8, 16...
@@ -47,29 +66,13 @@ edge * bottom_up_sort(edge sorted[], edge work[], int n){
     // Copy work to sorted
     CopyArray(sorted, work, n);
     for (i = 0; i < n; i++){
-      sorted[i] = work[i]
+      sorted[i] = work[i];
     }
   }
+  return sorted;
 }
 
-edge * bottom_up_merge(edge A[], edge B[], int left, int right, int end){
-  int i0 = left;
-  int i1 = right;
-  int j;
- 
-  // while there are elements on either side of lists
-  for (j = left; j < end; j++){
-    // if left list head exists and is <= existing right list head
-    if (i0 < right && (i1 >= end || A[i0] <= A[i1])){
-      B[j] = A[i0];
-      i0 += 1;
-    }
-    else{
-      B[j] = A[i1];
-      i1 += 1;
-    }
-  }
-}
+
 
 
 //This is the 0 dimension case with random weighted edges between each node
