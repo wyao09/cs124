@@ -88,13 +88,35 @@ int krustal_rand_wts (int numpoints)
 int krustal_rand_points(int numpoints, int dimension)
 {
 	double points[numpoints][dimension];
-	int i, j;
+	node *vertices[numpoints];
+	
+	edge *edgelist = NULL;
+	edge *tmp;
+	
+	int i, j, k;
+	double dist;
+	
 	srand(time(NULL));
 	
 	for (i=0; i<numpoints; i++)
 	{
-		for (j=0; j<dimensions; j++)
+		vertices[i] = makeset(i);
+		for (j=0; j<dimension; j++)
+		{
 			points[i][j] = ((double)rand()/ (double)(RAND_MAX));
+			printf("%f\t",points[i][j]);
+		}
+		printf("\n");
+	}
+	
+	for (i=0; i<numpoints; i++)
+	{
+		for (j=0; j<numpoints; j++)
+		{
+			if (i < j)
+			{
+			}
+		}
 	}
 }
 
@@ -121,4 +143,8 @@ int main (int argc, char **argv)
     {
       krustal_rand_wts(numpoints);
     }
+	if (dimension > 1 && dimension < 5)
+	{
+		krustal_rand_points(numpoints,dimension);
+	}
 }
