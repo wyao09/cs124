@@ -92,19 +92,18 @@ int krustal_rand_wts (int numpoints)
 {
   // QUESTION: Use integer values for faster run time?
   double weights[numpoints][numpoints];
-  int numedges = fact(numpoints)/(fact(numpoints-2)*2);
-  
+  int numedges = (int) (fact(numpoints)/(fact(numpoints-2)*2));
   
   node *vertices[numpoints];
   edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
     
   int i, j, k;
+  k=0;
   srand(time(NULL)); //seeds random generator with current system time
    
   // Mark-Set
   for (i=0; i<numpoints; i++)
     {
-      int k = i*numpoints+j;
       double w;
       
       // IMPLEMENT ME: 
@@ -114,13 +113,12 @@ int krustal_rand_wts (int numpoints)
 	  	if (i < j)
 	    {
 	      	w = ((double)rand()/ (double)(RAND_MAX));
-	  	  	k = i*numpoints+j;
 	  	  
 			edgelist[k].v_1 = i;
 			edgelist[k].v_2 = j;
 			edgelist[k].weight = w;
 			
-			printf("%d, %d - %f\n",edgelist[k].v_1,edgelist[k].v_2,edgelist[k].weight);
+			k++;
     	}
       }
     }
@@ -141,7 +139,8 @@ int krustal_rand_points(int numpoints, int dimension)
 	
   edge edgelist[fact(numpoints-1)];
 	
-  int i, j, k;
+  int i, j, k, l;
+  l=0;
   double dist, tmp;
 	
   srand(time(NULL));
@@ -172,9 +171,11 @@ int krustal_rand_points(int numpoints, int dimension)
 	      dist = dist/k;
 	      dist = pow(dist, (1.0/k));
 	      
-	      edgelist[i*numpoints+j].v_1 = i;
-	      edgelist[i*numpoints+j].v_2 = j;
-	      edgelist[i*numpoints+j].weight = dist;
+	      edgelist[l].v_1 = i;
+	      edgelist[l].v_2 = j;
+	      edgelist[l].weight = dist;
+	      
+	      l++;
 	      printf("%d %d - %f\n",i,j,dist);
 	    }
 	  }
