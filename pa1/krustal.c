@@ -27,12 +27,11 @@ typedef struct edge edge;
 
 /* Test Functions START */
 
-void print_list(edge list[]){
-  int n = sizeof(list)/sizeof(edge);
+void print_list(edge *list, int n){
   int i;
   for (i = 0; i < n; i++){
     edge e = list[i];
-    printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e,v_2);
+    printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e.v_2);
   }
 }
 
@@ -66,7 +65,7 @@ void bottom_up_merge(edge A[], edge B[], int left, int right, int end){
   }
 }
 
-edge * bottom_up_sort(edge sorted[], edge work[], int n){
+void bottom_up_sort(edge *sorted, edge *work, int n){
   int width;
   // Make successively longer sorted runs of length 2, 4, 8, 16...
   for (width = 1; width < n; width = width << 1){
@@ -83,7 +82,6 @@ edge * bottom_up_sort(edge sorted[], edge work[], int n){
       sorted[i] = work[i];
     }
   }
-  return sorted;
 }
 
 
@@ -96,8 +94,9 @@ int krustal_rand_wts (int numpoints)
   double weights[numpoints][numpoints];
   int numedges = fact(numpoints)/(fact(numpoints-2)*2);
   
+  
   node *vertices[numpoints];
-  edge edgelist[fact(numpoints-1)];
+  edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
     
   int i, j, k;
   srand(time(NULL)); //seeds random generator with current system time
@@ -125,7 +124,11 @@ int krustal_rand_wts (int numpoints)
     }
     
   //Sort edges
-    
+  print_list(edgelist, numedges);
+  printf("\n");
+  edge *sorted = (edge *)malloc(numedges*sizeof(edge));
+  bottom_up_sort(sorted, edgelist, numedges);
+  print_list(sorted, numedges);  
   //for edges in increasing order
 }
 
