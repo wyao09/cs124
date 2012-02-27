@@ -28,7 +28,17 @@ int krustal_rand_wts (int numpoints)
     {
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
-	weights[i][j] = ((double)rand()/ (double)(RAND_MAX));
+      {
+      	if (i < j)
+      	{
+	  		weights[i][j] = ((double)rand()/ (double)(RAND_MAX));
+	  		weights[j][i] = weights[i][j];
+	  	}
+	  	if (i==j)
+	  		weights[i][j] = 0;
+	  	printf("%f\t",weights[i][j]);
+	  }
+	  printf("\n");
     }
     
   //Sort edges
