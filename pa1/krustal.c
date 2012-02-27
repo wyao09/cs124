@@ -37,13 +37,10 @@ void print_list(edge *list, int n){
 
 /* Test Functions END */
 
-int fact(int x)
+// n choose 2
+int n_choose_2(int n)
 {
-  int i;
-  int j=1;
-  for (i=x; i>1; i--)
-    j = j*i;
-  return j;		
+  return (n*(n-1))/2;
 }
 
 void bottom_up_merge(edge *A, edge *B, int left, int right, int end){
@@ -100,7 +97,7 @@ int krustal_rand_wts (int numpoints)
 {
   // QUESTION: Use integer values for faster run time?
   double weights[numpoints][numpoints];
-  int numedges = (int) (fact(numpoints)/(fact(numpoints-2)*2));
+  int numedges = n_choose_2(numpoints);
   
   node *vertices[numpoints];
   edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
@@ -160,7 +157,7 @@ int krustal_rand_points(int numpoints, int dimension)
 {
   double points[numpoints][dimension];
   node *vertices[numpoints];
-  int numedges = (int) (fact(numpoints)/(fact(numpoints-2)*2));
+  int numedges = n_choose_2(numpoints);
 
 	
   edge edgelist[numedges];
