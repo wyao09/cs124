@@ -28,15 +28,15 @@ typedef struct edge edge;
 
 int fact(int x)
 {
-	int i;
-	int j=1;
-	for (i=x; i>1; i--)
-		j = j*i;
-	return j;		
+  int i;
+  int j=1;
+  for (i=x; i>1; i--)
+    j = j*i;
+  return j;		
 }
 
 // 
-edge * sort(edge *edgelist, int length){
+edge * sort(edge *edgelist){
   
 }
 
@@ -48,7 +48,7 @@ int krustal_rand_wts (int numpoints)
   int numedges = fact(numpoints)/(fact(numpoints-2)*2);
   
   node *vertices[numpoints];
-  edge *edgelist = NULL;
+  edge edgelist[];
   edge *tmp;
     
   int i, j;
@@ -63,31 +63,31 @@ int krustal_rand_wts (int numpoints)
       // IMPLEMENT ME: 
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
-      {
-      	if (i < j)
-      	{
-	  		w = ((double)rand()/ (double)(RAND_MAX));
+	{
+	  if (i < j)
+	    {
+	      w = ((double)rand()/ (double)(RAND_MAX));
 	  		
-	  		tmp = (edge *) malloc(sizeof(edge));
-	  		tmp->v_1 = i;
-	  		tmp->v_2 = j;
-	  		tmp->weight = w;
+	      tmp = (edge *) malloc(sizeof(edge));
+	      tmp->v_1 = i;
+	      tmp->v_2 = j;
+	      tmp->weight = w;
 	  		
-			// Prepend
-	  		if (edgelist != NULL)
-	  			edgelist->prev = tmp;
-	  		tmp->next = edgelist;
-	  		edgelist = tmp;
-	  	}
-	  }
+	      // Prepend
+	      if (edgelist != NULL)
+		edgelist->prev = tmp;
+	      tmp->next = edgelist;
+	      edgelist = tmp;
+	    }
+	}
     }
     
   tmp = edgelist;
   while (tmp != NULL)
-  {
-  	printf("(%d, %d) - %f\n",tmp->v_1, tmp->v_2, tmp->weight);
-  	tmp = tmp->next;
-  }
+    {
+      printf("(%d, %d) - %f\n",tmp->v_1, tmp->v_2, tmp->weight);
+      tmp = tmp->next;
+    }
     
   //Sort edges
     
@@ -96,43 +96,43 @@ int krustal_rand_wts (int numpoints)
 
 int krustal_rand_points(int numpoints, int dimension)
 {
-	double points[numpoints][dimension];
-	node *vertices[numpoints];
+  double points[numpoints][dimension];
+  node *vertices[numpoints];
 	
-	edge *edgelist = NULL;
-	edge *tmp;
+  edge *edgelist = NULL;
+  edge *tmp;
 	
-	int i, j, k;
-	double dist;
+  int i, j, k;
+  double dist;
 	
-	srand(time(NULL));
+  srand(time(NULL));
 	
-	for (i=0; i<numpoints; i++)
+  for (i=0; i<numpoints; i++)
+    {
+      vertices[i] = makeset(i);
+      for (j=0; j<dimension; j++)
 	{
-		vertices[i] = makeset(i);
-		for (j=0; j<dimension; j++)
-		{
-			points[i][j] = ((double)rand()/ (double)(RAND_MAX));
-			printf("%f\t",points[i][j]);
-		}
-		printf("\n");
+	  points[i][j] = ((double)rand()/ (double)(RAND_MAX));
+	  printf("%f\t",points[i][j]);
 	}
+      printf("\n");
+    }
 	
-	for (i=0; i<numpoints; i++)
+  for (i=0; i<numpoints; i++)
+    {
+      for (j=0; j<numpoints; j++)
 	{
-		for (j=0; j<numpoints; j++)
-		{
-			if (i < j)
-			{
-				dist = 0;
-				for (k=0; k<dimension; k++)
-					dist += pow((points[j][k] - points[i][k]),2);
-				dist = dist/k;
-				dist = pow(dist, (1.0/k));
-				printf("%d %d - %f\n",i,j,dist);
-			}
-		}
+	  if (i < j)
+	    {
+	      dist = 0;
+	      for (k=0; k<dimension; k++)
+		dist += pow((points[j][k] - points[i][k]),2);
+	      dist = dist/k;
+	      dist = pow(dist, (1.0/k));
+	      printf("%d %d - %f\n",i,j,dist);
+	    }
 	}
+    }
 }
 
 int main (int argc, char **argv)
@@ -158,8 +158,8 @@ int main (int argc, char **argv)
     {
       krustal_rand_wts(numpoints);
     }
-	if (dimension > 1 && dimension < 5)
-	{
-		krustal_rand_points(numpoints,dimension);
-	}
+  if (dimension > 1 && dimension < 5)
+    {
+      krustal_rand_points(numpoints,dimension);
+    }
 }
