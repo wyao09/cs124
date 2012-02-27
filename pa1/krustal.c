@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "dj_set.h"
 
 struct edge {
@@ -116,6 +117,12 @@ int krustal_rand_points(int numpoints, int dimension)
 		{
 			if (i < j)
 			{
+				dist = 0;
+				for (k=0; k<dimension; k++)
+					dist += pow((points[j][k] - points[i][k]),2);
+				dist = dist/k;
+				dist = pow(dist, (1.0/k));
+				printf("%d %d - %f\n",i,j,dist);
 			}
 		}
 	}
