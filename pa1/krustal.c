@@ -1,5 +1,5 @@
 /*
- * krustal.c - 
+ * kruskal.c - 
  *
  * usage: randmst 0 <numpoints> <numtrials> <dimension>
  *
