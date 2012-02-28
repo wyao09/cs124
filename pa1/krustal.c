@@ -20,9 +20,10 @@
 //GLOBAL
 int flag;
 
+// Note the unsigned short
 struct edge {
-  int v_1;
-  int v_2;
+  unsigned short v_1;
+  unsigned short v_2;
   double weight;
 };
 
@@ -99,7 +100,7 @@ int krustal_rand_wts (int numpoints)
 {
   int numedges = n_choose_2(numpoints);
   node *vertices[numpoints];
-  edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
+  edge *full_edgelist = (edge *)malloc(numedges*sizeof(edge));
     
   int i, j, k;
   k=0;
@@ -117,14 +118,25 @@ int krustal_rand_wts (int numpoints)
 	    {
 	      w = ((double)rand()/ (double)(RAND_MAX));
 	  	  
-	      edgelist[k].v_1 = i;
-	      edgelist[k].v_2 = j;
-	      edgelist[k].weight = w;
-			
-	      k++;
+	      full_edgelist[k].v_1 = i;
+	      full_edgelist[k].v_2 = j;
+	      //we can throw away edges here
+	      if (w < 0.1){
+		full_edgelist[k].weight = w;
+		k++;
+	      }
 	    }
 	}
     }
+  
+  // Compress
+  numedges = k;
+  edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
+  for (i = 0; i < numedges; i++){
+    edgelist[i] = full_edgelist[i];
+  }
+  free(full_edgelist);
+
   if (flag == 1){
     print_list(edgelist, numedges);
     printf("-----\n");
@@ -139,6 +151,9 @@ int krustal_rand_wts (int numpoints)
   double wt;
   double total_weight = 0;
   
+  //test
+  double max = 0;
+
   for (i=0; i<numedges; i++)
     {
       v1 = edgelist[i].v_1;
@@ -148,10 +163,13 @@ int krustal_rand_wts (int numpoints)
       if (find(vertices[v1]) != find(vertices[v2]))
   	{
 	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
+	  if (max < wt)
+	    max = wt;
 	  total_weight += wt;
 	  dj_union(vertices[v1],vertices[v2]);
   	}
     }
+  printf("max chosen weight is: %f\n", max);
 }
 
 int krustal_rand_points(int numpoints, int dimension)
@@ -216,12 +234,15 @@ int krustal_rand_points(int numpoints, int dimension)
   double wt;
   double total_weight = 0;
   
+  //testing
+  int max = 0;
+
   for (i=0; i<numedges; i++)
     {
       v1 = edgelist[i].v_1;
       v2 = edgelist[i].v_2;
       wt = edgelist[i].weight;
-  	
+      
       if (find(vertices[v1]) != find(vertices[v2]))
   	{
 	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
