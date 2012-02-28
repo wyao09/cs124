@@ -94,12 +94,45 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
   }
 }
 
+double kruskal(edge *edgelist, node **vertices, int numedges)
+{
+  //Sort edges 
+  edge *sorted = (edge *)malloc(numedges*sizeof(edge));
+  bottom_up_sort(sorted, edgelist, numedges);
+
+  print_list(sorted, numedges);
+  
+  int v1, v2, i;
+  double wt;
+  double total_weight = 0;
+  
+  //test
+  double max = 0;
+
+  for (i=0; i<numedges; i++)
+    {
+      v1 = edgelist[i].v_1;
+      v2 = edgelist[i].v_2;
+      wt = edgelist[i].weight;
+  	
+      if (find(vertices[v1]) != find(vertices[v2]))
+  	{
+	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
+	  if (max < wt)
+	    max = wt;
+	  total_weight += wt;
+	  dj_union(vertices[v1],vertices[v2]);
+  	}
+    }
+  printf("max chosen weight is: %f\n", max);
+}
 
 //This is the 0 dimension case with random weighted edges between each node
 int krustal_rand_wts (int numpoints)
 {
   int numedges = n_choose_2(numpoints);
-  node *vertices[numpoints];
+  
+  node **vertices = (node **)malloc(numedges*sizeof(node *));
   edge *full_edgelist = (edge *)malloc(numedges*sizeof(edge));
     
   int i, j, k;
@@ -141,46 +174,18 @@ int krustal_rand_wts (int numpoints)
     print_list(edgelist, numedges);
     printf("-----\n");
   }
-  //Sort edges 
-  edge *sorted = (edge *)malloc(numedges*sizeof(edge));
-  bottom_up_sort(sorted, edgelist, numedges);
-
-  print_list(sorted, numedges);
   
-  int v1, v2;
-  double wt;
-  double total_weight = 0;
-  
-  //test
-  double max = 0;
-
-  for (i=0; i<numedges; i++)
-    {
-      v1 = edgelist[i].v_1;
-      v2 = edgelist[i].v_2;
-      wt = edgelist[i].weight;
-  	
-      if (find(vertices[v1]) != find(vertices[v2]))
-  	{
-	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
-	  if (max < wt)
-	    max = wt;
-	  total_weight += wt;
-	  dj_union(vertices[v1],vertices[v2]);
-  	}
-    }
-  printf("max chosen weight is: %f\n", max);
+  double total_wt = kruskal(edgelist,vertices,numedges);
 }
 
 int krustal_rand_points(int numpoints, int dimension)
 {
   double points[numpoints][dimension];
-  node *vertices[numpoints];
   int numedges = n_choose_2(numpoints);
-
-	
-  edge edgelist[numedges];
-	
+  
+  node **vertices = (node **)malloc(sizeof(node *)*numpoints);
+  edge *edgelist = (edge *)malloc(sizeof(edge)*numedges);
+  
   int i, j, k, l;
   l=0;
   double dist, tmp;
@@ -223,33 +228,7 @@ int krustal_rand_points(int numpoints, int dimension)
 	}
     }
     
-  //Sort edges
-  edge *sorted = (edge *)malloc(numedges*sizeof(edge));
-  bottom_up_sort(sorted, edgelist, numedges);
-  print_list(sorted, numedges);  
-
-  //TODO: factor out duplicate code
-  
-  int v1, v2;
-  double wt;
-  double total_weight = 0;
-  
-  //testing
-  int max = 0;
-
-  for (i=0; i<numedges; i++)
-    {
-      v1 = edgelist[i].v_1;
-      v2 = edgelist[i].v_2;
-      wt = edgelist[i].weight;
-      
-      if (find(vertices[v1]) != find(vertices[v2]))
-  	{
-	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
-	  total_weight += wt;
-	  dj_union(vertices[v1],vertices[v2]);
-  	}
-    }
+  double total_weight = kruskal(edgelist, vertices, numedges);
 }
 
 int main (int argc, char **argv)
