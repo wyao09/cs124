@@ -136,7 +136,7 @@ double threshold(int numpoints, int dimension)
 }
 
 //This is the 0 dimension case with random weighted edges between each node
-int krustal_rand_wts (int numpoints)
+int kruskal_rand_wts (int numpoints)
 {
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,0);
@@ -187,7 +187,7 @@ int krustal_rand_wts (int numpoints)
   double total_wt = kruskal(edgelist,vertices,numedges);
 }
 
-int krustal_rand_points(int numpoints, int dimension)
+int kruskal_rand_points(int numpoints, int dimension)
 {
   double points[numpoints][dimension];
   int numedges = n_choose_2(numpoints);
@@ -277,7 +277,7 @@ int main (int argc, char **argv)
     
   // Case for Random Weights
   if (dimension == 0)
-      krustal_rand_wts(numpoints);
+      kruskal_rand_wts(numpoints);
   if (dimension > 1 && dimension < 5)
-      krustal_rand_points(numpoints,dimension);
+      kruskal_rand_points(numpoints,dimension);
 }
