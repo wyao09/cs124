@@ -1,7 +1,7 @@
 /*
  * kruskal.c - 
  *
- * usage: randmst 0 <numpoints> <numtrials> <dimension>
+ * usage: randmst <opcode> <numpoints> <numtrials> <dimension>
  *
  * assignment: cs124 pa1
  *
@@ -16,6 +16,7 @@
 #include "dj_set.h"
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define BOUND 1
 
 //GLOBAL
 int flag;
@@ -35,8 +36,6 @@ void print_list(edge *list, int n){
   int i;
   for (i = 0; i < n; i++){
     edge e = list[i];
-    if (flag == 1)
-      printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e.v_2);
   }
 }
 
@@ -100,13 +99,11 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
 
-  print_list(sorted, numedges);
+  //print_list(sorted, numedges);
   
   int v1, v2, i;
   double wt;
   double total_weight = 0;
-  
-  //test
   double max = 0;
 
   for (i=0; i<numedges; i++)
@@ -117,23 +114,29 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   	
       if (find(vertices[v1]) != find(vertices[v2]))
   	{
-	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
-	  if (max < wt)
+	  if (flag == BOUND && max < wt)
 	    max = wt;
+	  
 	  total_weight += wt;
 	  dj_union(vertices[v1],vertices[v2]);
   	}
     }
-  printf("max chosen weight is: %f\n", max);
+  
+  printf("total weight: %f\n", total_weight);
+  
+  // Testing upperbound
+  if (flag == BOUND)
+    return max;
+
   return total_weight;
 }
 
 double threshold(int numpoints, int dimension)
 {
-	if (numpoints > 10000)
-		return 0.2;
-	else
-		return 1.0;
+  if (numpoints > 10000)
+    return 0.2;
+  else
+    return 1.0;
 }
 
 //This is the 0 dimension case with random weighted edges between each node
@@ -166,8 +169,8 @@ double kruskal_rand_wts (int numpoints)
 	      if (w < thresh){
 	      	full_edgelist[k].v_1 = i;
 	      	full_edgelist[k].v_2 = j;
-			full_edgelist[k].weight = w;
-			k++;
+		full_edgelist[k].weight = w;
+		k++;
 	      }
 	    }
 	}
@@ -181,11 +184,6 @@ double kruskal_rand_wts (int numpoints)
   }
   free(full_edgelist);
 
-  if (flag == 1){
-    print_list(edgelist, numedges);
-    printf("-----\n");
-  }
-  
   return kruskal(edgelist,vertices,numedges);
 }
 
@@ -225,22 +223,22 @@ double kruskal_rand_points(int numpoints, int dimension)
 	    {
 	      dist = 0.0;
 	      for (k=0; k<dimension; k++)
-		  {
-		  	tmp = points[i][k]-points[j][k]; 
-		  	dist += pow(tmp,2);
-		  }
+		{
+		  tmp = points[i][k]-points[j][k]; 
+		  dist += pow(tmp,2);
+		}
 	      dist = dist/k;
 	      dist = pow(dist, (1.0/k));
 	      
 	      if (dist < thresh)
-	      {
-	      	full_edgelist[l].v_1 = i;
-	      	full_edgelist[l].v_2 = j;
-	      	full_edgelist[l].weight = dist;
+		{
+		  full_edgelist[l].v_1 = i;
+		  full_edgelist[l].v_2 = j;
+		  full_edgelist[l].weight = dist;
 	      		      
-	      	l++;
-	      	//printf("%d %d - %f\n",i,j,dist);
-	      }
+		  l++;
+		  //printf("%d %d - %f\n",i,j,dist);
+		}
 	    }
 	}
     }
@@ -252,11 +250,6 @@ double kruskal_rand_points(int numpoints, int dimension)
     edgelist[i] = full_edgelist[i];
   }
   free(full_edgelist);
-  
-    if (flag == 1){
-    print_list(edgelist, numedges);
-    printf("-----\n");
-  }
     
   return kruskal(edgelist, vertices, numedges);
 }
@@ -264,7 +257,7 @@ double kruskal_rand_points(int numpoints, int dimension)
 int main (int argc, char **argv)
 {
   if (argc != 5) {
-    printf("Usage: 0 numpoints numtrials dimension\n");
+    printf("Usage: randmst <opcode> <numpoints> <numtrials> <dimension>\n");
     return 0;
   }
     
@@ -278,17 +271,43 @@ int main (int argc, char **argv)
       printf("numpoints, numtrials, dimension must be non-negative integers");
       return 0;
     }
-    
-  // Case for Random Weights
-  int i;
-  double wt = 0.0;
   
-  for (i=0; i<numtrials; i++)
-  {
-  	if (dimension == 0)
-      wt += kruskal_rand_wts(numpoints);
-  	if (dimension > 1 && dimension < 5)
-      wt += kruskal_rand_points(numpoints,dimension);
+  // Test Upperbound
+  if (flag == BOUND){
+    int i;
+    double max;
+    double tmp;
+
+    for (i=0; i<numtrials; i++){
+      if (dimension == 0){
+	tmp = kruskal_rand_wts(numpoints);
+	if (tmp > max)
+	  max = tmp;
+      }
+      
+      if (dimension > 1 && dimension < 5){
+	tmp = kruskal_rand_points(numpoints,dimension);
+	if (tmp > max)
+	  max = tmp;
+      }
+    }
+
+    printf("After %d trials using dimension %d and n = %d, max chosen weight is: %f\n", 
+	   numtrials, dimension, numpoints, max);
   }
-  printf("==== Average tree weight - %f ====\n",wt/numtrials);
+
+  else{
+    // Case for Random Weights
+    int i;
+    double wt = 0.0;
+  
+    for (i=0; i<numtrials; i++)
+      {
+  	if (dimension == 0)
+	  wt += kruskal_rand_wts(numpoints);
+  	if (dimension > 1 && dimension < 5)
+	  wt += kruskal_rand_points(numpoints,dimension);
+      }
+    printf("==== Average tree weight: %f ====\n",wt/numtrials);
+  }
 }
