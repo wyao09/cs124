@@ -17,6 +17,9 @@
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
+//GLOBAL
+int flag;
+
 struct edge {
   int v_1;
   int v_2;
@@ -31,7 +34,8 @@ void print_list(edge *list, int n){
   int i;
   for (i = 0; i < n; i++){
     edge e = list[i];
-    printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e.v_2);
+    if (flag == 1)
+      printf("#%d has weight %f and nodes %d and %d\n",i, e.weight, e.v_1, e.v_2);
   }
 }
 
@@ -90,22 +94,16 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
 }
 
 
-
-
 //This is the 0 dimension case with random weighted edges between each node
 int krustal_rand_wts (int numpoints)
 {
-  // QUESTION: Use integer values for faster run time?
-  double weights[numpoints][numpoints];
   int numedges = n_choose_2(numpoints);
-  
   node *vertices[numpoints];
   edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
     
   int i, j, k;
   k=0;
   srand(time(NULL)); //seeds random generator with current system time
-   
   // Mark-Set
   for (i=0; i<numpoints; i++)
     {
@@ -127,30 +125,33 @@ int krustal_rand_wts (int numpoints)
 	    }
 	}
     }
-    
-  //Sort edges
+  if (flag == 1){
+    print_list(edgelist, numedges);
+    printf("-----\n");
+  }
+  //Sort edges 
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
-  print_list(sorted, numedges);  
-  //for edges in increasing order
+
+  print_list(sorted, numedges);
   
   int v1, v2;
   double wt;
   double total_weight = 0;
   
   for (i=0; i<numedges; i++)
-  {
-  	v1 = edgelist[i].v_1;
-  	v2 = edgelist[i].v_2;
-  	wt = edgelist[i].weight;
+    {
+      v1 = edgelist[i].v_1;
+      v2 = edgelist[i].v_2;
+      wt = edgelist[i].weight;
   	
-  	if (find(vertices[v1]) != find(vertices[v2]))
+      if (find(vertices[v1]) != find(vertices[v2]))
   	{
-  		printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
-  		total_weight += wt;
-  		dj_union(vertices[v1],vertices[v2]);
+	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
+	  total_weight += wt;
+	  dj_union(vertices[v1],vertices[v2]);
   	}
-  }
+    }
 }
 
 int krustal_rand_points(int numpoints, int dimension)
@@ -208,25 +209,26 @@ int krustal_rand_points(int numpoints, int dimension)
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
   print_list(sorted, numedges);  
-  //for edges in increasing order
+
+  //TODO: factor out duplicate code
   
   int v1, v2;
   double wt;
   double total_weight = 0;
   
   for (i=0; i<numedges; i++)
-  {
-  	v1 = edgelist[i].v_1;
-  	v2 = edgelist[i].v_2;
-  	wt = edgelist[i].weight;
+    {
+      v1 = edgelist[i].v_1;
+      v2 = edgelist[i].v_2;
+      wt = edgelist[i].weight;
   	
-  	if (find(vertices[v1]) != find(vertices[v2]))
+      if (find(vertices[v1]) != find(vertices[v2]))
   	{
-  		printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
-  		total_weight += wt;
-  		dj_union(vertices[v1],vertices[v2]);
+	  printf("Adding edge (%d, %d) of weight %f\n",v1,v2,wt);
+	  total_weight += wt;
+	  dj_union(vertices[v1],vertices[v2]);
   	}
-  }
+    }
 }
 
 int main (int argc, char **argv)
@@ -236,11 +238,11 @@ int main (int argc, char **argv)
     return 0;
   }
     
-  int flag = atoi(argv[1]);
+  flag = atoi(argv[1]);
   int numpoints = atoi(argv[2]);
   int numtrials = atoi(argv[3]);
   int dimension = atoi(argv[4]);
-    
+
   if (numpoints <= 0 || numtrials <= 0 || dimension < 0)
     {
       printf("numpoints, numtrials, dimension must be non-negative integers");
@@ -249,11 +251,7 @@ int main (int argc, char **argv)
     
   // Case for Random Weights
   if (dimension == 0)
-    {
       krustal_rand_wts(numpoints);
-    }
   if (dimension > 1 && dimension < 5)
-    {
       krustal_rand_points(numpoints,dimension);
-    }
 }
