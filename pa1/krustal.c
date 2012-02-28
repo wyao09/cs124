@@ -129,10 +129,10 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
 
 double threshold(int numpoints, int dimension)
 {
-	if (numpoints > 10)
-		return 0.1;
+	if (numpoints > 50)
+		return 0.2;
 	else
-		return 0.5;
+		return 1.0;
 }
 
 //This is the 0 dimension case with random weighted edges between each node
