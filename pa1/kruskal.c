@@ -125,6 +125,7 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   	}
     }
   printf("max chosen weight is: %f\n", max);
+  return total_weight;
 }
 
 double threshold(int numpoints, int dimension)
@@ -136,7 +137,8 @@ double threshold(int numpoints, int dimension)
 }
 
 //This is the 0 dimension case with random weighted edges between each node
-int kruskal_rand_wts (int numpoints)
+//Returns total weight of tree
+double kruskal_rand_wts (int numpoints)
 {
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,0);
@@ -184,10 +186,12 @@ int kruskal_rand_wts (int numpoints)
     printf("-----\n");
   }
   
-  double total_wt = kruskal(edgelist,vertices,numedges);
+  return kruskal(edgelist,vertices,numedges);
 }
 
-int kruskal_rand_points(int numpoints, int dimension)
+
+//Returns total weight of tree
+double kruskal_rand_points(int numpoints, int dimension)
 {
   double points[numpoints][dimension];
   int numedges = n_choose_2(numpoints);
@@ -208,9 +212,9 @@ int kruskal_rand_points(int numpoints, int dimension)
       for (j=0; j<dimension; j++)
 	{
 	  points[i][j] = ((double)rand()/ (double)(RAND_MAX));
-	  printf("%f\t",points[i][j]);
+	  //printf("%f\t",points[i][j]);
 	}
-      printf("\n");
+      //printf("\n");
     }
 	
   for (i=0; i<numpoints; i++)
@@ -235,7 +239,7 @@ int kruskal_rand_points(int numpoints, int dimension)
 	      	full_edgelist[l].weight = dist;
 	      		      
 	      	l++;
-	      	printf("%d %d - %f\n",i,j,dist);
+	      	//printf("%d %d - %f\n",i,j,dist);
 	      }
 	    }
 	}
@@ -254,7 +258,7 @@ int kruskal_rand_points(int numpoints, int dimension)
     printf("-----\n");
   }
     
-  double total_weight = kruskal(edgelist, vertices, numedges);
+  return kruskal(edgelist, vertices, numedges);
 }
 
 int main (int argc, char **argv)
@@ -276,8 +280,15 @@ int main (int argc, char **argv)
     }
     
   // Case for Random Weights
-  if (dimension == 0)
-      kruskal_rand_wts(numpoints);
-  if (dimension > 1 && dimension < 5)
-      kruskal_rand_points(numpoints,dimension);
+  int i;
+  double wt = 0.0;
+  
+  for (i=0; i<numtrials; i++)
+  {
+  	if (dimension == 0)
+      wt += kruskal_rand_wts(numpoints);
+  	if (dimension > 1 && dimension < 5)
+      wt += kruskal_rand_points(numpoints,dimension);
+  }
+  printf("==== Average tree weight - %f ====\n",wt/numtrials);
 }
