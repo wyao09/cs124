@@ -129,7 +129,7 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
 
 double threshold(int numpoints, int dimension)
 {
-	if (numpoints > 50)
+	if (numpoints > 10000)
 		return 0.2;
 	else
 		return 1.0;
