@@ -69,10 +69,18 @@ A description of your guess for the function $f(n)$.
 \begin{problem}{}
 Which algorithm did you use and why?
 
+We chose to implement Kruskal's algorithm, which required us to implement a disjoint heap data structure and a sorting algorithm.  Our decision to use Kruskal's algorithm came out of a choice between the two most commonly used algorithms, which are both fairly feasible to implement - Kruskal's and Prim's.
+
+Prim's algorithm has a better amortized runtime for dense graphs, although the amortized runtime of its best reported implementation ($O(E + VlogV)$) requires the programmer to implement a Fibonacci heap, which is a rather daunting task.  Kruskal's algorithm has the benefit of using simpler data structures, and in general graphs its $O(ElogV)$ runtime is not too shabby.  Additionally, the disjoint set data structure and the sort that we had to implement would be good targets for optimization.  For the disjoint set, we implemented it as a tree (as discussed in class) utilizing path compression for the traversal operations to amortize future lookups.  The sort we implemented was a merge sort, which runs in a solid $O(nlog(n))$.
+
+While we knew we would be testing complete graphs, we also knew that due to the uniform random distribution of the points/weights, we would be able to throw out a significant number of edges before running Kruskal's algorithm.  Within the same dimension, as the number of vertices increased, we noticed the maximum weight of an edge included in the spanning tree decreased in a predictable fashion.  This was because as more nodes are added to a complete graph with uniformly random weights (or weights derived from uniformly random points), there is a higher chance of finding a shorter path that spans a given node.  By running multiple iterations of our algorithm on graphs of varying size and dimension, we were able to fit a size-dependent threshold function for each dimension that would give a ceiling for the weights of edges that could be included in the minimum spanning tree (shown below).
+
+Thus, as our program generates graphs, it automatically discards edges with weights above the value of the threshold function.  This significantly reduced the size of the problem, improving both the space and runtime efficiency of Kruskal's algorithm.
+
 \end{problem}
 
 \begin{problem}{}
-Are the growth rate surprising? Can you come up with an explanation
+Are the growth rates surprising? Can you come up with an explanation
 for them?
 
 \end{problem}
@@ -86,6 +94,8 @@ notice things like the cache size of your computer having an effect?
 \begin{problem}{}
 Did you have any interesting experiences with the random number
 generator? Do you trust it?
+
+When we first wrote our code, we seeded the random number generator with the C system time.  This worked fine for single runs on a graph of a given size (or multiple runs on graphs of large size), but ended up producing the same "random" values for repeated iterations of small graph sizes.  This was because the C system time is reported in seconds, and once we realized this we switched over to the posix "gettimeofday()" function, which allowed us to seed our random number generator with system time in nanoseconds times system time in seconds.  While this works for our purposes (we empirically tested on small cases to make sure this was generating a good degree of randomness), it is less than ideal to have a ceiling on how fast our program can run and still produce "random" output.  
 
 \end{problem}
 
