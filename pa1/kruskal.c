@@ -236,8 +236,7 @@ double kruskal_rand_points(int numpoints, int dimension) {
 		  tmp = points[i][k]-points[j][k]; 
 		  dist += pow(tmp,2);
 		}
-	      dist = dist/k;
-	      dist = pow(dist, (1.0/k));
+	      dist = pow(dist, (1.0/2));
 	      
 	      if (dist < thresh)
 		{
