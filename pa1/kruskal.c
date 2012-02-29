@@ -52,8 +52,12 @@ int n_choose_2(int n){
 }
 
 double threshold(int numpoints, int dimension) {
-  if (dimension == 0)
+  if (dimension == 0){
+    // Tighter bound for case of n = 32678 or smaller
+    if(numpoints <=32678)
+      return 1.5/log2(numpoints) -.09;
     return 1.0/log2(numpoints);
+  }
   else
     return ((double)(dimension))/log2(numpoints); // divide by 2 ?
 }
