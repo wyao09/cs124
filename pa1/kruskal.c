@@ -29,6 +29,13 @@ struct edge {
 
 typedef struct edge edge;
 
+struct list {
+  edge e;
+  void *list;
+};
+
+typedef struct list list; 
+
 /* Test Functions START*/
 
 void print_list(edge *list, int n) {
@@ -140,11 +147,10 @@ double kruskal_rand_wts (int numpoints) {
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,0);
   
-  node **vertices = (node **)malloc(numedges*sizeof(node *));
+  node **vertices = (node **)malloc(numpoints*sizeof(node *));
   edge *full_edgelist = (edge *)malloc(numedges*sizeof(edge));
-    
-  int i, j, k;
-  k=0;
+
+  int i, j, k = 0;
   
   struct timeval t1;
   gettimeofday(&t1, NULL);
