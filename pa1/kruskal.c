@@ -40,8 +40,9 @@ void print_list(edge *list, int n) {
 
 /* Helper Functions START */
 
-int n_choose_2(int n)
+int n_choose_2(int n){
   return (n*(n-1))/2;
+}
 
 double threshold(int numpoints, int dimension) {
   if (dimension == 0)
