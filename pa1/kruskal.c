@@ -21,7 +21,6 @@
 //GLOBAL
 int flag;
 
-// Note the unsigned short
 struct edge {
   unsigned short v_1;
   unsigned short v_2;
@@ -30,24 +29,31 @@ struct edge {
 
 typedef struct edge edge;
 
-/* Test Functions START */
+/* Test Functions START*/
 
-void print_list(edge *list, int n){
+void print_list(edge *list, int n) {
   int i;
   for (i = 0; i < n; i++){
     edge e = list[i];
   }
 }
 
-/* Test Functions END */
+/* Helper Functions START */
 
-// n choose 2
-int n_choose_2(int n)
-{
+int n_choose_2(int n){
   return (n*(n-1))/2;
 }
 
-void bottom_up_merge(edge *A, edge *B, int left, int right, int end){
+double threshold(int numpoints, int dimension) {
+  if (dimension == 0)
+    return 1.0/log2(numpoints);
+  else
+    return ((double)(dimension))/log2(numpoints);
+}
+
+/* Merge Functions START */
+
+void bottom_up_merge(edge *A, edge *B, int left, int right, int end) {
   int i0 = left;
   int i1 = right;
   int j;
@@ -66,7 +72,7 @@ void bottom_up_merge(edge *A, edge *B, int left, int right, int end){
   }
 }
 
-void bottom_up_sort(edge *sorted, edge *work, int n){
+void bottom_up_sort(edge *sorted, edge *work, int n) {
   int width;
   int i;
 
@@ -77,10 +83,8 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
 
   // Make successively longer sorted runs of length 2, 4, 8, 16...
   for (width = 1; width < n; width = width << 1){
-    // sorted is full of runs of length width
+    // Sorted is full of runs of length width
     for (i = 0; i < n; i = i + (width << 1)){
-      /* merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[] */
-      /*  or copy A[i:n-1] to B[] ( if(i+width >= n) ) */
       bottom_up_merge(sorted, work, i, MIN(i+width, n), MIN(i+2*width, n));
     }
 
@@ -91,8 +95,9 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
   }
 }
 
-double kruskal(edge *edgelist, node **vertices, int numedges)
-{
+/* Kruskal Functions START */
+
+double kruskal(edge *edgelist, node **vertices, int numedges) {
   //Sort edges 
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
@@ -127,18 +132,11 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   return total_weight;
 }
 
-double threshold(int numpoints, int dimension)
-{
-	if (dimension == 0)
-  		return 1.0/log2(numpoints);
-  	else
-  		return ((double)(dimension))/log2(numpoints);
-}
+
 
 //This is the 0 dimension case with random weighted edges between each node
 //Returns total weight of tree
-double kruskal_rand_wts (int numpoints)
-{
+double kruskal_rand_wts (int numpoints) {
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,0);
   
@@ -156,8 +154,7 @@ double kruskal_rand_wts (int numpoints)
   for (i=0; i<numpoints; i++)
     {
       double w;
-      
-      // IMPLEMENT ME: 
+       
       vertices[i] = makeset(i);
       for (j=0; j<numpoints; j++)
 	{
@@ -165,7 +162,7 @@ double kruskal_rand_wts (int numpoints)
 	    {
 	      w = ((double)rand()/ (double)(RAND_MAX));
 	  	  
-	      //we can throw away edges here
+	      // Throw away edges
 	      if (w < thresh){
 	      	full_edgelist[k].v_1 = i;
 	      	full_edgelist[k].v_2 = j;
@@ -187,7 +184,7 @@ double kruskal_rand_wts (int numpoints)
   double total_wt = kruskal(edgelist,vertices,numedges);
   
   for (i=0; i<numpoints; i++)
-  	free(vertices[i]);
+    free(vertices[i]);
   free(edgelist);
   free(vertices);
   
@@ -196,8 +193,7 @@ double kruskal_rand_wts (int numpoints)
 
 
 //Returns total weight of tree
-double kruskal_rand_points(int numpoints, int dimension)
-{
+double kruskal_rand_points(int numpoints, int dimension) {
   double points[numpoints][dimension];
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,dimension);
@@ -260,15 +256,16 @@ double kruskal_rand_points(int numpoints, int dimension)
   double total_wt = kruskal(edgelist,vertices,numedges);
   
   for (i=0; i<numpoints; i++)
-  	free(vertices[i]);
+    free(vertices[i]);
   free(edgelist);
   free(vertices);
   
   return total_wt;
 }
 
-int main (int argc, char **argv)
-{
+/* MAIN */
+
+int main (int argc, char **argv) {
   if (argc != 5) {
     printf("Usage: randmst <opcode> <numpoints> <numtrials> <dimension>\n");
     return 0;
@@ -279,14 +276,13 @@ int main (int argc, char **argv)
   int numtrials = atoi(argv[3]);
   int dimension = atoi(argv[4]);
 
-  if (numpoints <= 0 || numtrials <= 0 || dimension < 0)
-    {
-      printf("numpoints, numtrials, dimension must be non-negative integers");
-      return 0;
-    }
+  if (numpoints <= 0 || numtrials <= 0 || dimension < 0) {
+    printf("numpoints, numtrials, dimension must be non-negative integers");
+    return 0;
+  }
   
   // Test Upperbound
-  if (flag == BOUND){
+  if (flag == BOUND) {
     int i;
     double max;
     double tmp;
@@ -294,14 +290,14 @@ int main (int argc, char **argv)
     for (i=0; i<numtrials; i++){
       if (dimension == 0){
       	tmp = kruskal_rand_wts(numpoints);
-		if (tmp > max)
-	  		max = tmp;
+	if (tmp > max)
+	  max = tmp;
       }
       
       if (dimension > 1 && dimension < 5){
-		tmp = kruskal_rand_points(numpoints,dimension);
-		if (tmp > max)
-	  		max = tmp;
+	tmp = kruskal_rand_points(numpoints,dimension);
+	if (tmp > max)
+	  max = tmp;
       }
     }
 
