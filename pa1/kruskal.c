@@ -31,7 +31,7 @@ typedef struct edge edge;
 
 struct list {
   edge e;
-  void *list;
+  struct list *next;
 };
 
 typedef struct list list; 
@@ -148,7 +148,7 @@ double kruskal_rand_wts (int numpoints) {
   double thresh = threshold(numpoints,0);
   
   node **vertices = (node **)malloc(numpoints*sizeof(node *));
-  edge *full_edgelist = (edge *)malloc(numedges*sizeof(edge));
+  list *full_edgelist = (list *)malloc(sizeof(list));
 
   int i, j, k = 0;
   
@@ -170,9 +170,12 @@ double kruskal_rand_wts (int numpoints) {
 	  	  
 	      // Throw away edges
 	      if (w < thresh){
-	      	full_edgelist[k].v_1 = i;
-	      	full_edgelist[k].v_2 = j;
-		full_edgelist[k].weight = w;
+		list *tmp = (list *)malloc(sizeof(list));
+		tmp->e.v_1 = i;
+		tmp->e.v_2 = j;
+		tmp->e.weight = w;
+		tmp->next = full_edgelist;
+		full_edgelist = tmp;
 		k++;
 	      }
 	    }
@@ -183,7 +186,10 @@ double kruskal_rand_wts (int numpoints) {
   numedges = k;
   edge *edgelist = (edge *)malloc(numedges*sizeof(edge));
   for (i = 0; i < numedges; i++){
-    edgelist[i] = full_edgelist[i];
+    edgelist[i] = full_edgelist->e;
+    list *tmp = full_edgelist->next;
+    free(full_edgelist);
+    full_edgelist = tmp;
   }
   free(full_edgelist);
 
