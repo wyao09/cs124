@@ -4,3 +4,4 @@ randmst
 *.aux
 *.pdf
 *.log
+*.gz(busy)
