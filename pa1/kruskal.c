@@ -307,8 +307,9 @@ int main (int argc, char **argv) {
 
   else{
     // Case for Random Weights
-    int i, time;
+    int i;
     double wt = 0.0;
+    double time = 0.0;
   
   	struct timeval t1, t2;
     srand(t1.tv_usec * t1.tv_sec);
@@ -320,16 +321,17 @@ int main (int argc, char **argv) {
   			gettimeofday(&t1, NULL); 
 	 		wt += kruskal_rand_wts(numpoints);
 	 		gettimeofday(&t2, NULL);
-	 		time = (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
+	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	 	}
   		if (dimension > 1 && dimension < 5)
   		{
 			gettimeofday(&t1, NULL); 
-	 		wt += kruskal_rand_pts(numpoints,dimension);
+	 		wt += kruskal_rand_points(numpoints,dimension);
 	 		gettimeofday(&t2, NULL);
-	 		time = (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
+	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	  	}
       }
     printf("==== Average tree weight: %f ====\n",wt/numtrials);
+    printf("==== Average time: %f microseconds ====\n",time/numtrials);
   }
 }
