@@ -121,6 +121,8 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   // Testing upperbound
   if (flag == BOUND)
     return max;
+	
+  free(sorted);
 
   return total_weight;
 }
