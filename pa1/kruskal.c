@@ -329,15 +329,16 @@ int main (int argc, char **argv) {
 	 		gettimeofday(&t2, NULL);
 	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	 	}
-  		if (dimension > 1 && dimension < 5)
+  		else if (dimension > 1 && dimension < 5)
   		{
 			gettimeofday(&t1, NULL); 
-	 		wt += kruskal_rand_points(numpoints,dimension);
+	 		double tmp = kruskal_rand_points(numpoints,dimension);
+			wt += tmp;
+			printf("%f\n", tmp);
 	 		gettimeofday(&t2, NULL);
 	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	  	}
       }
-    printf("==== Average tree weight: %f ====\n",wt/numtrials);
-    printf("==== Average time: %f microseconds ====\n",time/numtrials);
+    printf("%d,%d,%f,%f\n", dimension, numpoints , (wt/numtrials), (time/numtrials));
   }
 }
