@@ -291,7 +291,6 @@ int main (int argc, char **argv)
 
     for (i=0; i<numtrials; i++){
       if (dimension == 0){
-      	printf("trial %d ==> ",i);
       	tmp = kruskal_rand_wts(numpoints);
 		if (tmp > max)
 	  		max = tmp;
