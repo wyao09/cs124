@@ -48,7 +48,7 @@ void print_list(edge *list, int n) {
 /* Helper Functions START */
 
 int n_choose_2(int n){
-  return (n*(n-1))/2;
+  return (n*(n-1)) >> 1;
 }
 
 double threshold(int numpoints, int dimension) {
@@ -92,7 +92,7 @@ void bottom_up_sort(edge *sorted, edge *work, int n) {
   for (width = 1; width < n; width = width << 1){
     // Sorted is full of runs of length width
     for (i = 0; i < n; i = i + (width << 1)){
-      bottom_up_merge(sorted, work, i, MIN(i+width, n), MIN(i+2*width, n));
+      bottom_up_merge(sorted, work, i, MIN(i+width, n), MIN(i+(width << 1), n));
     }
 
     // Copy work to sorted
