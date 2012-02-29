@@ -72,7 +72,6 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
 
   // Initial copy work to sorted
   for (i = 0; i < n; i++){
-    //printf("%d weighs %f\n", i, work[i].weight);
     sorted[i] = work[i];
   }
 
@@ -87,7 +86,6 @@ void bottom_up_sort(edge *sorted, edge *work, int n){
 
     // Copy work to sorted
     for (i = 0; i < n; i++){
-      //printf("%d weighs %f\n", i, work[i].weight);
       sorted[i] = work[i];
     }
   }
@@ -98,8 +96,6 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
   //Sort edges 
   edge *sorted = (edge *)malloc(numedges*sizeof(edge));
   bottom_up_sort(sorted, edgelist, numedges);
-
-  //print_list(sorted, numedges);
   
   int v1, v2, i;
   double wt;
@@ -121,8 +117,6 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
 	  dj_union(vertices[v1],vertices[v2]);
   	}
     }
-
-  printf("total weight: %f\n", total_weight);
   
   // Testing upperbound
   if (flag == BOUND)
@@ -155,8 +149,7 @@ double kruskal_rand_wts (int numpoints)
   struct timeval t1;
   gettimeofday(&t1, NULL);
   srand(t1.tv_usec * t1.tv_sec);
-    
-  printf("%d == ",rand());
+  
   // Mark-Set
   for (i=0; i<numpoints; i++)
     {
@@ -224,9 +217,7 @@ double kruskal_rand_points(int numpoints, int dimension)
       for (j=0; j<dimension; j++)
 	{
 	  points[i][j] = ((double)rand()/ (double)(RAND_MAX));
-	  //printf("%f\t",points[i][j]);
 	}
-      //printf("\n");
     }
 	
   for (i=0; i<numpoints; i++)
@@ -251,7 +242,6 @@ double kruskal_rand_points(int numpoints, int dimension)
 		  full_edgelist[l].weight = dist;
 	      		      
 		  l++;
-		  //printf("%d %d - %f\n",i,j,dist);
 		}
 	    }
 	}
