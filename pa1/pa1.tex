@@ -97,7 +97,7 @@ notice things like the cache size of your computer having an effect?
 Did you have any interesting experiences with the random number
 generator? Do you trust it?
 
-When we first wrote our code, we seeded the random number generator with the C system time.  This worked fine for single runs on a graph of a given size (or multiple runs on graphs of large size), but ended up producing the same "random" values for repeated iterations of small graph sizes.  This was because the C system time is reported in seconds, and once we realized this we switched over to the posix "gettimeofday()" function, which allowed us to seed our random number generator with system time in nanoseconds times system time in seconds.  While this works for our purposes (we empirically tested on small cases to make sure this was generating a good degree of randomness), it is less than ideal to have a ceiling on how fast our program can run and still produce "random" output.  
+When we first wrote our code, we seeded the random number generator with the C system time.  This worked fine for single runs on a graph of a given size (or multiple runs on graphs of large size), but ended up producing the same "random" values for repeated iterations of small graph sizes.  This was because the C system time is reported in seconds, and once we realized this we switched over to the posix "gettimeofday()" function, which allowed us to seed our random number generator with system time in microseconds times system time in seconds.  While this works for our purposes (we empirically tested on small cases to make sure this was generating a good degree of randomness), it is less than ideal to have a ceiling on how fast our program can run and still produce "random" output.  
 
 \end{problem}
 

@@ -311,15 +311,28 @@ int main (int argc, char **argv)
 
   else{
     // Case for Random Weights
-    int i;
+    int i, time;
     double wt = 0.0;
   
+  	struct timeval t1, t2;
+    srand(t1.tv_usec * t1.tv_sec);
+  	
     for (i=0; i<numtrials; i++)
       {
-  	if (dimension == 0)
-	  wt += kruskal_rand_wts(numpoints);
-  	if (dimension > 1 && dimension < 5)
-	  wt += kruskal_rand_points(numpoints,dimension);
+  		if (dimension == 0)
+  		{
+  			gettimeofday(&t1, NULL); 
+	 		wt += kruskal_rand_wts(numpoints);
+	 		gettimeofday(&t2, NULL);
+	 		time = (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
+	 	}
+  		if (dimension > 1 && dimension < 5)
+  		{
+			gettimeofday(&t1, NULL); 
+	 		wt += kruskal_rand_pts(numpoints,dimension);
+	 		gettimeofday(&t2, NULL);
+	 		time = (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
+	  	}
       }
     printf("==== Average tree weight: %f ====\n",wt/numtrials);
   }
