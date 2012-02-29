@@ -55,7 +55,7 @@ double threshold(int numpoints, int dimension) {
   if (dimension == 0)
     return 1.0/log2(numpoints);
   else
-    return ((double)(dimension))/log2(numpoints);
+    return ((double)(dimension))/log2(numpoints); // divide by 2 ?
 }
 
 /* Merge Functions START */
@@ -306,7 +306,7 @@ int main (int argc, char **argv) {
       }
     }
 
-    printf("After %d trials using dimension %d and n = %d, max chosen weight is: %f\n", 
+    printf("%d,%d,%d,%f\n", 
 	   numtrials, dimension, numpoints, max);
   }
 
@@ -331,9 +331,7 @@ int main (int argc, char **argv) {
   		else if (dimension > 1 && dimension < 5)
   		{
 			gettimeofday(&t1, NULL); 
-	 		double tmp = kruskal_rand_points(numpoints,dimension);
-			wt += tmp;
-			printf("%f\n", tmp);
+			wt += kruskal_rand_points(numpoints,dimension);
 	 		gettimeofday(&t2, NULL);
 	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	  	}
