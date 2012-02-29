@@ -121,7 +121,7 @@ double kruskal(edge *edgelist, node **vertices, int numedges)
 	  dj_union(vertices[v1],vertices[v2]);
   	}
     }
-  
+
   printf("total weight: %f\n", total_weight);
   
   // Testing upperbound
@@ -151,7 +151,12 @@ double kruskal_rand_wts (int numpoints)
     
   int i, j, k;
   k=0;
-  srand(time(NULL)); //seeds random generator with current system time
+  
+  struct timeval t1;
+  gettimeofday(&t1, NULL);
+  srand(t1.tv_usec * t1.tv_sec);
+    
+  printf("%d == ",rand());
   // Mark-Set
   for (i=0; i<numpoints; i++)
     {
@@ -184,7 +189,14 @@ double kruskal_rand_wts (int numpoints)
   }
   free(full_edgelist);
 
-  return kruskal(edgelist,vertices,numedges);
+  double total_wt = kruskal(edgelist,vertices,numedges);
+  
+  for (i=0; i<numpoints; i++)
+  	free(vertices[i]);
+  free(edgelist);
+  free(vertices);
+  
+  return total_wt;
 }
 
 
@@ -202,7 +214,9 @@ double kruskal_rand_points(int numpoints, int dimension)
   l=0;
   double dist, tmp;
 	
-  srand(time(NULL));
+  struct timeval t1;
+  gettimeofday(&t1, NULL);
+  srand(t1.tv_usec * t1.tv_sec);
 	
   for (i=0; i<numpoints; i++)
     {
@@ -251,7 +265,14 @@ double kruskal_rand_points(int numpoints, int dimension)
   }
   free(full_edgelist);
     
-  return kruskal(edgelist, vertices, numedges);
+  double total_wt = kruskal(edgelist,vertices,numedges);
+  
+  for (i=0; i<numpoints; i++)
+  	free(vertices[i]);
+  free(edgelist);
+  free(vertices);
+  
+  return total_wt;
 }
 
 int main (int argc, char **argv)
@@ -280,15 +301,16 @@ int main (int argc, char **argv)
 
     for (i=0; i<numtrials; i++){
       if (dimension == 0){
-	tmp = kruskal_rand_wts(numpoints);
-	if (tmp > max)
-	  max = tmp;
+      	printf("trial %d ==> ",i);
+      	tmp = kruskal_rand_wts(numpoints);
+		if (tmp > max)
+	  		max = tmp;
       }
       
       if (dimension > 1 && dimension < 5){
-	tmp = kruskal_rand_points(numpoints,dimension);
-	if (tmp > max)
-	  max = tmp;
+		tmp = kruskal_rand_points(numpoints,dimension);
+		if (tmp > max)
+	  		max = tmp;
       }
     }
 
