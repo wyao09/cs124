@@ -152,7 +152,11 @@ double kruskal_rand_wts (int numpoints) {
   double thresh = threshold(numpoints,0);
   
   node **vertices = (node **)malloc(numpoints*sizeof(node *));
-  edge *full_edgelist = (edge *)malloc(numedges*sizeof(edge));
+  edge *full_edgelist;
+  if (numpoints > 46000)
+    full_edgelist = (edge *)malloc(8770000000000*sizeof(edge));
+  else
+    full_edgelist = (edge *)malloc(numedges*sizeof(edge));
 
   int i, j, k = 0;
   
@@ -207,10 +211,14 @@ double kruskal_rand_points(int numpoints, int dimension) {
   double points[numpoints][dimension];
   int numedges = n_choose_2(numpoints);
   double thresh = threshold(numpoints,dimension);
-  
-  node **vertices = (node **)malloc(sizeof(node *)*numpoints);
-  edge *full_edgelist = (edge *)malloc(sizeof(edge)*numedges);
-  
+
+  node **vertices = (node **)malloc(numpoints*sizeof(node *));
+  edge *full_edgelist;
+  if (numpoints > 46000)
+    full_edgelist = (edge *)malloc(8770000000000*sizeof(edge));
+  else
+    full_edgelist = (edge *)malloc(numedges*sizeof(edge));
+    
   int i, j, k, l;
   l=0;
   double dist, tmp;
