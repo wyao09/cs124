@@ -1,0 +1,94 @@
+\documentclass[12pt]{article}
+
+%AMS-TeX packages
+\usepackage{amssymb,amsmath,amsthm} 
+%geometry (sets margin) and other useful packages
+\usepackage[margin=1.25in]{geometry}
+\usepackage{graphicx,ctable,booktabs}
+
+
+%Redefining sections as problems
+%
+\makeatletter
+\newenvironment{problem}{\@startsection
+       {section}
+       {1}
+       {-.2em}
+       {-3.5ex plus -1ex minus -.2ex}
+       {2.3ex plus .2ex}
+       {\pagebreak[3]%forces pagebreak when space is small; use \eject for better results
+       \large\bf\noindent{Problem }
+       }
+       }
+       {%\vspace{1ex}\begin{center} \rule{0.3\linewidth}{.3pt}\end{center}}
+       \begin{center}\large\bf \ldots\ldots\ldots\end{center}}
+\makeatother
+
+
+%
+%Fancy-header package to modify header/page numbering 
+%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%\addtolength{\headwidth}{\marginparsep} %these change header-rule width
+%\addtolength{\headwidth}{\marginparwidth}
+\lhead{Problem \thesection}
+\chead{} 
+\rhead{\thepage} 
+\lfoot{\small\scshape CS124} 
+\cfoot{} 
+\rfoot{\footnotesize PA 1 Writeup} 
+\renewcommand{\headrulewidth}{.3pt} 
+\renewcommand{\footrulewidth}{.3pt}
+\setlength\voffset{-0.25in}
+\setlength\textheight{648pt}
+
+%1%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+%Contents of problem set
+%    
+\begin{document}
+
+\title{CS124: PA 1 Writeup}
+\author{Wen-Yuan Yao & Aidan Daly}
+\date{3/1/2012}
+\maketitle
+\thispagestyle{empty}
+
+\begin{problem}{}
+A table or graph listing the average tree size for serveral values of n.
+
+\end{problem}
+
+\begin{problem}{}
+A description of your guess for the function $f(n)$.
+
+\end{problem}
+
+\begin{problem}{}
+Which algorithm did you use and why?
+
+\end{problem}
+
+\begin{problem}{}
+Are the growth rate surprising? Can you come up with an explanation
+for them?
+
+\end{problem}
+
+\begin{problem}{}
+How long does it take your alg to run? Does this make sense? Do you
+notice things like the cache size of your computer having an effect?
+
+\end{problem}
+
+\begin{problem}{}
+Did you have any interesting experiences with the random number
+generator? Do you trust it?
+
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

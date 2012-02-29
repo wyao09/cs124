@@ -1,2 +1,6 @@
 randmst
 .DS_Store
+*.gz
+*.aux
+*.pdf
+*.log
