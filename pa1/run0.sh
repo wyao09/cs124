@@ -11,6 +11,3 @@
 ./randmst 0 8192 5 0
 ./randmst 0 16384 5 0
 ./randmst 0 32678 5 0
-./randmst 0 65356 5 0
-./randmst 0 130712 5 0
-./randmst 0 261424 5 0

@@ -18,12 +18,16 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define BOUND 1
 
+// Empirically tested for our specific machine to push limits
+#define MAXPOINTS 32678
+#define MAXEDGES 8000000000000
+
 //GLOBAL
 int flag;
 
 struct edge {
-  unsigned short v_1;
-  unsigned short v_2;
+  unsigned int v_1;
+  unsigned int v_2;
   double weight;
 };
 
@@ -59,7 +63,7 @@ double threshold(int numpoints, int dimension) {
     return 1.0/log2(numpoints);
   }
   else
-    return ((double)(dimension))/log2(numpoints); // divide by 2 ?
+    return ((double)(dimension))/log2(numpoints);
 }
 
 /* Merge Functions START */
@@ -153,8 +157,8 @@ double kruskal_rand_wts (int numpoints) {
   
   node **vertices = (node **)malloc(numpoints*sizeof(node *));
   edge *full_edgelist;
-  if (numpoints > 46000)
-    full_edgelist = (edge *)malloc(8770000000000*sizeof(edge));
+  if (numpoints > MAXPOINTS)
+    full_edgelist = (edge *)malloc(MAXEDGES*sizeof(edge));
   else
     full_edgelist = (edge *)malloc(numedges*sizeof(edge));
 
@@ -214,8 +218,9 @@ double kruskal_rand_points(int numpoints, int dimension) {
 
   node **vertices = (node **)malloc(numpoints*sizeof(node *));
   edge *full_edgelist;
-  if (numpoints > 46000)
-    full_edgelist = (edge *)malloc(8770000000000*sizeof(edge));
+  if (numpoints > MAXPOINTS){
+    full_edgelist = (edge *)malloc(MAXEDGES*sizeof(edge));
+  }
   else
     full_edgelist = (edge *)malloc(numedges*sizeof(edge));
     
