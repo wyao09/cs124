@@ -2,6 +2,9 @@
  * kruskal.c - 
  *
  * usage: randmst <opcode> <numpoints> <numtrials> <dimension>
+ * opcode 0 = test for average tree size
+ * opcode 1 = test for maximum edge weight
+ * opcode 2 = test for average Kruskals run time (omits generation)
  *
  * assignment: cs124 pa1
  *
@@ -17,6 +20,7 @@
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define BOUND 1
+#define TIMER 2
 
 // Empirically tested for our specific machine to push limits
 #define MAXPOINTS 32678
@@ -24,6 +28,7 @@
 
 //GLOBAL
 int flag;
+int edge_counter = 0;
 
 struct edge {
   unsigned int v_1;
@@ -199,13 +204,30 @@ double kruskal_rand_wts (int numpoints) {
   }
   free(full_edgelist);
 
+  // timer start
+  struct timeval t3, t4;
+  if (flag == TIMER){
+    edge_counter += numedges;
+    gettimeofday(&t3, NULL); 
+  }
+
   double total_wt = kruskal(edgelist,vertices,numedges);
   
+  // timer end
+  if (flag == TIMER){
+    gettimeofday(&t4, NULL);
+    return (pow(10,6)*t4.tv_sec + t4.tv_usec) - (pow(10,6)*t3.tv_sec + t3.tv_usec);
+  }
+
   for (i=0; i<numpoints; i++)
     free(vertices[i]);
   free(edgelist);
   free(vertices);
-  
+
+  if (flag == TIMER){
+    return (pow(10,6)*t4.tv_sec + t4.tv_usec) - (pow(10,6)*t3.tv_sec + t3.tv_usec);
+  }
+
   return total_wt;
 }
 
@@ -266,7 +288,8 @@ double kruskal_rand_points(int numpoints, int dimension) {
 	    }
 	}
     }
-    
+
+  // compress
   numedges = l;
   edge *edgelist = (edge *)malloc(sizeof(edge)*numedges);
   
@@ -274,14 +297,31 @@ double kruskal_rand_points(int numpoints, int dimension) {
     edgelist[i] = full_edgelist[i];
   }
   free(full_edgelist);
-    
+  
+  // timer start
+  struct timeval t3, t4;
+  if (flag == TIMER){
+    edge_counter += numedges;
+    gettimeofday(&t3, NULL); 
+  }  
+  
   double total_wt = kruskal(edgelist,vertices,numedges);
   
+  // timer end
+  if (flag == TIMER){
+    gettimeofday(&t4, NULL);
+    return (pow(10,6)*t4.tv_sec + t4.tv_usec) - (pow(10,6)*t3.tv_sec + t3.tv_usec);
+  }
+
   for (i=0; i<numpoints; i++)
     free(vertices[i]);
   free(edgelist);
   free(vertices);
-  
+
+  if (flag == TIMER){
+    return (pow(10,6)*t4.tv_sec + t4.tv_usec) - (pow(10,6)*t3.tv_sec + t3.tv_usec);
+  }
+
   return total_wt;
 }
 
@@ -333,7 +373,7 @@ int main (int argc, char **argv) {
     double wt = 0.0;
     double time = 0.0;
   
-  	struct timeval t1, t2;
+    struct timeval t1, t2;
     srand(t1.tv_usec * t1.tv_sec);
   	
     for (i=0; i<numtrials; i++)
@@ -353,6 +393,10 @@ int main (int argc, char **argv) {
 	 		time += (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
 	  	}
       }
+    // Print average edges kept (the E in O(E log V) )
+    if (flag == TIMER){
+      printf("%d,", (edge_counter/numtrials));
+    }
     printf("%d,%d,%f,%f\n", dimension, numpoints , (wt/numtrials), (time/numtrials));
   }
 }
