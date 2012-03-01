@@ -63,6 +63,22 @@ A table or graph listing the average tree size for serveral values of n.
 \begin{problem}{}
 A description of your guess for the function $f(n)$.
 
+The growth function for 0 dimensions (random weights) was constant with respect to $n$ - roughly 1.2.
+
+The growth function we determined for dimensions 1 or higher was:
+\begin{equation}
+f(n) = \frac{2}{3}\frac{n}{n^{1/k}}
+\end{equation}
+Where $k$ is the dimension of the problem.  The way we came to this function, which agrees very nicely with our empirical data, is as follows:
+
+For any graph of size $n$, the minimum spanning tree will contain $n-1$ edges.  Thus, the total weight of the tree will obviously be proportional to $n$.  We figured that we could predict the weight of the tree by multiplying $n$ by the average weight of an edge we'd expect to be included in the tree.  We reasoned the average weight of such edges by first considering the one-dimensional case.
+
+In the one-dimensional case, we'd expect nodes to be uniformly distributed on a line between 0 and 1.  Thus, we'd expect the average distance between any two adjacent nodes to be $\frac{1}{n}$.  Since the MST in 1 dimension is simply connecting all the adjacent nodes, we'd thus expect the average weight of an edge included in the MST to be $\frac{1}{n}$, which is consistent with our prediction.  Looking at the higher dimensional cases, it is still generally the case that edges added to the MST will be between "adjacent" nodes (i.e., edges between a node and its nearest neighbors).  We still expect points to be uniformly distributed in our unit shape at higher dimensions, and thus distance between a node and its nearest neighbors is still expected to be $\frac{1}{n^k}$.  Thus, assuming that edges are generally added between nodes and their nearest neighbors (which is generally true), the average weight of a node included in the MST will be $\frac{1}{n^k}$ in any dimension.
+
+From our estimation, the growth function should be proportional to $\frac{n}{n^{1/k}}$, which indeed it is.  We found from empirical evidence that the constant scaling factor required to fit our data the best was $\frac{2}{3}$.
+
+As for the "0 dimensional case" (random weights), we would expect it to be roughly similar to the 1-dimensional case since all edges are chosen to have weights uniformly between 0 and 1.  Indeed, as our above formula predicted, the average weight of the MST in "0D" is constant with respect to $n$.  However, it seems to be bounded at 1.2 rather than $\frac{2}{3}$, which may be due to the fact that we are making a single draw from a uniform to determine the weight rather than taking the difference of two draws.
+
 \end{problem}
 
 \begin{problem}{}
@@ -83,6 +99,10 @@ Thus, as our program generates graphs, it automatically discards edges with weig
 \begin{problem}{}
 Are the growth rates surprising? Can you come up with an explanation
 for them?
+
+The growth rates are not entirely surprising.  As expected, the average tree size increased with respect to the number of nodes since there are more nodes to cover, making the MST larger.  Slightly less intuitive is the growth with respect to the dimension.  For a given number of points, the higher dimension graphs have a heavier average MST.  This is, however, consistent with expectations after considering a little math:
+
+Since each coordinate of each point is drawn uniformly at random, let $x$ be the expected difference in any coordinate between any pair of points.  Since the distance between two points is the square root of the sum of the squared differences, we'd expect the distance between two points to be roughly proportional to $\sqrt{2n^2}$ in dimension 2, or generally $\sqrt{kn^2}$ in dimension $k$.  This is not as sound a foundation as described above in our explanation of the function bounding the growth rates, but gives some intuition behind the growth.
 
 \end{problem}
 
