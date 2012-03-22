@@ -15,16 +15,28 @@
 #include <math.h>
 
 /* generate random matrix */
-int *rand_matrix(int n){
-  int matrix[n][n]; // needs to be malloc-ed or passed in?
+// need to add argument that determines type of random matrix
+void rand_matrix(int n, int **m){
+  srand(time(NULL)); // need to us POSIX time?
   int i, j;
-  for (i = 0, i < n, i++){
-    for (j = 0, j < n, j++){
-      srand(time(NULL)); // can be placed outside the loop?
-      matrix[i][j] = rand() % 3;
+  for (i = 0; i < n; i++){
+    for (j = 0; j < n; j++){
+      m[i][j] = rand() % 3;
     }
   }
-  return matrix;
+  return;
+}
+
+/* print matrix */
+void print_matrix(int n, int **m){
+  int i, j;
+  for (i = 0; i < n; i++){
+    for(j = 0; j < n; j++){
+      printf("%d ",m[i][j]);
+    }
+    printf("\n");
+  }
+  return;
 }
 
 /* conventional matrix multiplication */
@@ -46,10 +58,31 @@ void conventional( int **a, int **b, int **c, int d){
   
 }
 
+int main(int argc, char *argv[]){
+  if (argc != 4){
+    printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
+    return 1;
+  }   
+
+  // commandline input
+  int dim = atoi(argv[2]);
+
+  // need to optimize this allocation
+  int i;
+  int** m = (int**)malloc(dim * sizeof(int*));     
+  for (i=0;i<dim;++i){
+      m[i] = (int*)malloc(dim * sizeof(int));
+  }
+  
+  rand_matrix(dim, m);
+    print_matrix(dim, m);
+  return 0;
+}
+
 /* Strassen's algorithm */
 
 /*------------------------------------------------------------------------------*/
-/* Sample code from wikipedia */
+/* Sample code from wikipedia 
 void strassen(double **a, double **b, double **c, int tam){
  
         // trivial case: when the matrice is 1 X 1:
@@ -196,7 +229,7 @@ void strassen(double **a, double **b, double **c, int tam){
  
 } // end of strassen function
  
-/*------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
 // function to sum two matrices
 void soma(double **a, double **b, double **resultado, int tam){
  
@@ -209,7 +242,7 @@ void soma(double **a, double **b, double **resultado, int tam){
         }
 }
  
-/*------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
 // function to subtract two matrices
 void subtrai(double **a, double **b, double **resultado, int tam){
  
@@ -222,7 +255,7 @@ void subtrai(double **a, double **b, double **resultado, int tam){
         }       
 }
  
-/*------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
 // This function alocates the matrice using malloc, and initializes it. If the variable randomico is passed
 // as zero, it initializes the matrice with zero, if it's passed as 1, it initializes the matrice with randomic
 // values. If it is passed with any other int value (like -1 for example) the matrice is initialized with no
@@ -271,7 +304,7 @@ double **alocar_matriz_real (int tam, int randomico)
    return (v);     // retorna o ponteiro para o vetor
 }
  
-/*------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
 // This function unalocates the matrice (frees memory)
 double **liberar_matriz_real (double **v, int tam)
 { // inicio funçao
