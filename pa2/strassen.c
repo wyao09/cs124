@@ -46,16 +46,21 @@ void conventional( int **a, int **b, int **c, int d){
     c[0][0] = a[0][0] * b[0][0];
     return;
   }
-  int i, j;
-  // need 3 loops i think
+  int i, j, k;
+  int tmp;
+
+  // runs across a column
   for (i=0; i<d; i++){
-    int tmp = 0;
+    // runs across a row
     for (j=0; j<d; j++){
-      tmp = a[i][j] * b[j][i];
+      tmp = 0;
+      // calculate an element
+      for (k=0; k<d; k++){
+	tmp += a[i][k] * b[k][j];
+      }
+      c[i][j] = tmp;
     }
-    
   }
-  
 }
 
 int main(int argc, char *argv[]){
@@ -69,13 +74,28 @@ int main(int argc, char *argv[]){
 
   // need to optimize this allocation
   int i;
-  int** m = (int**)malloc(dim * sizeof(int*));     
+  int** a = (int**)malloc(dim * sizeof(int*));     
   for (i=0;i<dim;++i){
-      m[i] = (int*)malloc(dim * sizeof(int));
+      a[i] = (int*)malloc(dim * sizeof(int));
   }
+  int** b = (int**)malloc(dim * sizeof(int*));     
+  for (i=0;i<dim;++i){
+      b[i] = (int*)malloc(dim * sizeof(int));
+  }  
+  int** c = (int**)malloc(dim * sizeof(int*));     
+  for (i=0;i<dim;++i){
+      c[i] = (int*)malloc(dim * sizeof(int));
+  }
+
+  rand_matrix(dim, a);
+  print_matrix(dim, a);
+  rand_matrix(dim, b);
+  print_matrix(dim, b);
   
-  rand_matrix(dim, m);
-    print_matrix(dim, m);
+  conventional(a, b, c, dim);
+
+  print_matrix(dim, c);
+
   return 0;
 }
 
