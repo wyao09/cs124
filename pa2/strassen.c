@@ -63,6 +63,23 @@ void conventional( int **a, int **b, int **c, int d){
   }
 }
 
+// can be optimized?
+int **m_malloc(dim){
+  int i;
+  int** m = (int**)malloc(dim * sizeof(int*));     
+  for (i=0;i<dim;++i)
+      m[i] = (int*)malloc(dim * sizeof(int));
+  return m;
+}
+
+void m_free(int **m, int dim){
+  int i;
+  for (i=0;i<dim;++i)
+    free(m[i]);
+  free(m);
+  return;
+}
+
 int main(int argc, char *argv[]){
   if (argc != 4){
     printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
@@ -72,29 +89,25 @@ int main(int argc, char *argv[]){
   // commandline input
   int dim = atoi(argv[2]);
 
-  // need to optimize this allocation
-  int i;
-  int** a = (int**)malloc(dim * sizeof(int*));     
-  for (i=0;i<dim;++i){
-      a[i] = (int*)malloc(dim * sizeof(int));
-  }
-  int** b = (int**)malloc(dim * sizeof(int*));     
-  for (i=0;i<dim;++i){
-      b[i] = (int*)malloc(dim * sizeof(int));
-  }  
-  int** c = (int**)malloc(dim * sizeof(int*));     
-  for (i=0;i<dim;++i){
-      c[i] = (int*)malloc(dim * sizeof(int));
-  }
+  int **a = m_malloc(dim);
+  int **b = m_malloc(dim);
+  int **c = m_malloc(dim);
 
   rand_matrix(dim, a);
   print_matrix(dim, a);
+  printf("\n");
   rand_matrix(dim, b);
   print_matrix(dim, b);
-  
+
+  printf("\n");
   conventional(a, b, c, dim);
 
+  m_free(a, dim);
+  m_free(b, dim);
+
   print_matrix(dim, c);
+
+  m_free(c, dim);
 
   return 0;
 }
