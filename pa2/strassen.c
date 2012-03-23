@@ -3,6 +3,8 @@
  *
  * usage: ./strassen 0 <dimension> <inputﬁle>
  *
+ * opcode 0 = conventional, 1 = strassens
+ *
  * assignment: cs124 pa2
  *
  * authors: Aidan Daly <aidan.daly@college.harvard.edu>
@@ -15,6 +17,10 @@
 #include <math.h>
 #include "strassen.h"
 
+#define I 1
+#define II 2
+#define III 3
+#define IV 4
 
 int main(int argc, char **argv){
   if (argc != 4){
@@ -24,6 +30,7 @@ int main(int argc, char **argv){
 
   // commandline input
   int dim = atoi(argv[2]);
+  int opcode = atoi(argv[1]);
 
   int **a = m_malloc(dim);
   int **b = m_malloc(dim);
@@ -36,9 +43,11 @@ int main(int argc, char **argv){
   print_matrix(dim, b);
 
   printf("\n");
-  conventional(a, b, c, dim);
-  //printf("strassens!\n");
-  //strassen(a, b, c, dim);
+  if(opcode)
+    strassen(a, b, c, dim);
+  else
+    conventional(a, b, c, dim);
+
 
   m_free(a, dim);
   m_free(b, dim);
@@ -124,11 +133,45 @@ void sum(int **a, int **b, int **c, int d){
       c[i][j] = a[i][j] + b[i][j];
 }
 
+//this assumes even dim
+void sum_m(int **a, int **b, int **c, int new_d, int mode){
+  int i,j;
+  for (i=0; i<new_d; i++){
+    for (j=0; j<new_d; j++){
+      if(mode == I)
+	c[i][j] = a[i][j] + b[i][j];
+      else if(mode == II)
+	c[i][j + new_d] = a[i][j] + b[i][j];
+      else if(mode == III)
+	c[i + new_d][j] = a[i][j] + b[i][j];
+      else if(mode == IV)
+	c[i + new_d][j + new_d] = a[i][j] + b[i][j];
+    }
+  }
+}
+
 void sub(int **a, int **b, int **c, int d){
   int i,j;
   for (i=0; i<d; i++)
     for (j=0; j<d; j++)
       c[i][j] = a[i][j] - b[i][j];
+}
+
+//this assumes even dim
+void sub_m(int **a, int **b, int **c, int new_d, int mode){
+  int i,j;
+  for (i=0; i<new_d; i++){
+    for (j=0; j<new_d; j++){
+      if(mode == I)
+	c[i][j] = a[i][j] - b[i][j];
+      else if(mode == II)
+	c[i][j + new_d] = a[i][j] - b[i][j];
+      else if(mode == III)
+	c[i + new_d][j] = a[i][j] - b[i][j];
+      else if(mode == IV)
+	c[i + new_d][j + new_d] = a[i][j] - b[i][j];
+    }
+  }
 }
 
 void strassen(int **a, int **b, int **c, int d){
@@ -142,7 +185,7 @@ void strassen(int **a, int **b, int **c, int d){
 
   int **a11, **a12, **a21, **a22;
   int **b11, **b12, **b21, **b22;
-  int **c11, **c12, **c21, **c22;
+  //  int **c11, **c12, **c21, **c22;
   int **m1, **m2, **m3, **m4, **m5, **m6, **m7;
   int **t1, **t2;
 
@@ -154,10 +197,10 @@ void strassen(int **a, int **b, int **c, int d){
   b12 = m_malloc(new_dim);
   b21 = m_malloc(new_dim);
   b22 = m_malloc(new_dim);
-  c11 = m_malloc(new_dim);
+  /*c11 = m_malloc(new_dim);
   c12 = m_malloc(new_dim);
   c21 = m_malloc(new_dim);
-  c22 = m_malloc(new_dim);
+  c22 = m_malloc(new_dim); */
   m1 = m_malloc(new_dim);
   m2 = m_malloc(new_dim);
   m3 = m_malloc(new_dim);
@@ -229,7 +272,7 @@ void strassen(int **a, int **b, int **c, int d){
   */
 
   // do we really need the sub c? cant we just place them in c directly?
-  sum(m1, m4, t1, new_dim);
+  /*  sum(m1, m4, t1, new_dim);
   sum(t1, m7, t2, new_dim);
   sub(t2, m5, c11, new_dim);
 
@@ -240,7 +283,23 @@ void strassen(int **a, int **b, int **c, int d){
   sum(m1, m3, t1, new_dim);
   sum(t1, m6, t2, new_dim);
   sub(t2, m2, c22, new_dim);
+  */
 
+
+  sum(m1, m4, t1, new_dim);
+  sum(t1, m7, t2, new_dim);
+  sub_m(t2, m5, c, new_dim, I);
+
+  sum_m(m3, m5, c, new_dim, II);
+
+  sum_m(m2, m4, c, new_dim, III);
+  
+  sum(m1, m3, t1, new_dim);
+  sum(t1, m6, t2, new_dim);
+  sub_m(t2, m2, c, new_dim, IV);
+
+
+  /*
   // consolidate
   for (i = 0; i < new_dim ; i++){
     for (j = 0 ; j < new_dim ; j++){
@@ -250,6 +309,9 @@ void strassen(int **a, int **b, int **c, int d){
       c[i + new_dim][j + new_dim] = c22[i][j];
     }
   }
+  */
+
+
 
   //free
   m_free(a11, new_dim);
@@ -260,10 +322,10 @@ void strassen(int **a, int **b, int **c, int d){
   m_free(b12, new_dim);
   m_free(b21, new_dim);
   m_free(b22, new_dim);
-  m_free(c11, new_dim);
+  /*  m_free(c11, new_dim);
   m_free(c12, new_dim);
   m_free(c21, new_dim);
-  m_free(c22, new_dim);
+  m_free(c22, new_dim);*/
   m_free(m1, new_dim);
   m_free(m2, new_dim);
   m_free(m3, new_dim);
@@ -273,4 +335,5 @@ void strassen(int **a, int **b, int **c, int d){
   m_free(m7, new_dim);
   m_free(t1, new_dim);
   m_free(t2, new_dim);
+  
 }
