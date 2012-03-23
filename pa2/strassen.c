@@ -21,6 +21,7 @@
 #define II 2
 #define III 3
 #define IV 4
+#define INT 12
 
 int main(int argc, char **argv){
   if (argc != 4){
@@ -36,24 +37,47 @@ int main(int argc, char **argv){
   int **b = m_malloc(dim);
   int **c = m_malloc(dim);
 
-  rand_matrix(dim, a);
+
+  // file I/O
+  FILE *fp;
+  fp = fopen(argv[3], "r");
+  if (fp != NULL){
+    char line[INT];
+    int i = 0;
+    int n;
+
+    while( fgets(line, sizeof line, fp) != NULL){
+      n = atoi(line);
+      if(i < dim*dim){
+	a[i/dim][i%dim] = n;
+      }
+      else{
+	b[i/dim - dim][i%dim] = n;
+      }
+      i++;
+    }
+    fclose(fp);
+  }
+  else{
+    printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
+    return 1;
+  }
+  // file I/O ends
+
   print_matrix(dim, a);
   printf("\n");
-  rand_matrix(dim, b);
   print_matrix(dim, b);
-
   printf("\n");
+
   if(opcode)
     strassen(a, b, c, dim);
   else
     conventional(a, b, c, dim);
 
+  print_matrix(dim, c);
 
   m_free(a, dim);
   m_free(b, dim);
-
-  print_matrix(dim, c);
-
   m_free(c, dim);
 
   return 0;
