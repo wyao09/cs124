@@ -39,13 +39,28 @@ int main(int argc, char **argv){
   int dim = atoi(argv[2]);
   int opcode = atoi(argv[1]);
 
-  int **a = m_malloc(dim);
-  int **b = m_malloc(dim);
-  int **c = m_malloc(dim);
+  int **a, **b, **c;
+  
+  //Padding to nearest power of 2 for Strassen
+  if (opcode == 1) {
+  	int x = 0;
+  	while (pow(2,x) < dim)
+	  x++;
+	dim = pow(2,x);
+  }
+  a = m_malloc(dim);
+  b = m_malloc(dim);
+  c = m_malloc(dim);
+  
+  //Zeroes all entries
+  int i,j;
+  for (i=0; i<dim; i++) {
+  	for (j=0; j<dim; j++) {
+  		a[i][j] = 0; b[i][j] = 0; c[i][j] = 0;
+  	}
+  }
 
   // need to round dimension size to pow of 2 and pad zeros
-
-
 
   // file I/O
   FILE *fp;
