@@ -96,7 +96,11 @@ int main(int argc, char **argv){
 /* generate random matrix */
 // need to add argument that determines type of random matrix
 void rand_matrix(int n, int **m){
-  srand(time(NULL)); // need to us POSIX time?
+  //Seeds random number generator with posix time
+  struct timeval t1;
+  gettimeofday(&t1, NULL);
+  srand(t1.tv_usec * t1.tv_sec);
+  
   int i, j;
   for (i = 0; i < n; i++){
     for (j = 0; j < n; j++){
@@ -119,7 +123,7 @@ void print_matrix(int n, int **m){
 }
 
 /* conventional matrix multiplication */
-// for now assume square matrices (can we assume this ??)
+// assumes square matrices
 void conventional(int **a, int **b, int **c, int d){
   int i, j, k;
   int tmp;
