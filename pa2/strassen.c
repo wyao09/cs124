@@ -61,32 +61,11 @@ int main(int argc, char **argv){
   	}
   }
 
-  // need to round dimension size to pow of 2 and pad zeros
-
   // file I/O
   FILE *fp;
   fp = fopen(argv[3], "r");
-  if (fp != NULL){
-    char line[INT];
-    int i = 0;
-    int n;
-
-    while( fgets(line, sizeof line, fp) != NULL){
-      n = atoi(line);
-      if(i < dim*dim){
-	a[i/dim][i%dim] = n;
-      }
-      else{
-	b[i/dim - dim][i%dim] = n;
-      }
-      i++;
-    }
-    fclose(fp);
-  }
-  else{
-    printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
-    return 1;
-  }
+  if (read_matrices(dim, a, b, fp) == 0)
+  	return 0;
   // file I/O ends
 
   print_matrix(dim, a);
@@ -108,6 +87,31 @@ int main(int argc, char **argv){
   return 0;
 }
 
+int read_matrices(int dim, int **a, int **b, FILE *fp)
+{
+  if (fp != NULL){
+    char line[INT];
+    int i = 0;
+    int n;
+
+    while( fgets(line, sizeof line, fp) != NULL){
+      n = atoi(line);
+      if(i < dim*dim){
+	a[i/dim][i%dim] = n;
+      }
+      else{
+	b[i/dim - dim][i%dim] = n;
+      }
+      i++;
+    }
+    fclose(fp);
+    return 1;
+  }
+  else{
+    printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
+    return 0;
+  }
+}
 
 /* generate random matrix */
 // need to add argument that determines type of random matrix
@@ -249,7 +253,7 @@ void strassen(int **a, int **b, int **c, int d){
   b11 = m_malloc(new_dim);
   b12 = m_malloc(new_dim);
   b21 = m_malloc(new_dim);
-  b22 = m_malloc(new_dim);
+  b22 = m_malloc(new_dim); 
   /*c11 = m_malloc(new_dim);
   c12 = m_malloc(new_dim);
   c21 = m_malloc(new_dim);
