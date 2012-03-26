@@ -22,6 +22,7 @@
 #define III 3
 #define IV 4
 #define INT 12
+#define CUTOFF 1000
 
 /*int pow_2[33] = {1,2,4,8,16,32,64,128,256,512,1024,2048,
 		 4096,8192,16384,32768,65536,131072,262144,
@@ -31,7 +32,7 @@
 
 int main(int argc, char **argv){
   if (argc != 4){
-    printf("usage: ./strassen 0 <dimension> <inputﬁle>\n");
+    printf("usage: ./strassen 0 <dimension> <inputﬁle>|r\n");
     return 1;
   }   
 
@@ -61,12 +62,18 @@ int main(int argc, char **argv){
   	}
   }
 
-  // file I/O
-  FILE *fp;
-  fp = fopen(argv[3], "r");
-  if (read_matrices(dim, a, b, fp) == 0)
-  	return 0;
-  // file I/O ends
+  // reads input matrices
+  if (strcmp(argv[3],"r") != 0) {
+  	FILE *fp;
+  	fp = fopen(argv[3], "r");
+  	if (read_matrices(dim, a, b, fp) == 0)
+  		return 0;
+  }
+  // generates random matrices
+  else {
+  	rand_matrix(dim,a);
+  	rand_matrix(dim,b);
+  }
 
   print_matrix(dim, a);
   printf("\n");
