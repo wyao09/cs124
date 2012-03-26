@@ -23,11 +23,11 @@
 #define IV 4
 #define INT 12
 
-int pow_2[33] = {1,2,4,8,16,32,64,128,256,512,1024,2048,
+/*int pow_2[33] = {1,2,4,8,16,32,64,128,256,512,1024,2048,
 		 4096,8192,16384,32768,65536,131072,262144,
 		 524288,1048576,2097152,4194304,8388608,
 		 16777216,33554432,67108864,134217728,268435456,
-		 536870912,1073741824,2147483648,4294967296};
+		 536870912,1073741824,2147483648,4294967296};*/
 
 int main(int argc, char **argv){
   if (argc != 4){
@@ -42,15 +42,16 @@ int main(int argc, char **argv){
   int **a, **b, **c;
   
   //Padding to nearest power of 2 for Strassen
+  int dim_2 = dim;
   if (opcode == 1) {
   	int x = 0;
   	while (pow(2,x) < dim)
 	  x++;
-	dim = pow(2,x);
+	dim_2 = pow(2,x);
   }
-  a = m_malloc(dim);
-  b = m_malloc(dim);
-  c = m_malloc(dim);
+  a = m_malloc(dim_2);
+  b = m_malloc(dim_2);
+  c = m_malloc(dim_2);
   
   //Zeroes all entries
   int i,j;
@@ -94,7 +95,7 @@ int main(int argc, char **argv){
   printf("\n");
 
   if(opcode)
-    strassen(a, b, c, dim);
+    strassen(a, b, c, dim_2);
   else
     conventional(a, b, c, dim);
 
