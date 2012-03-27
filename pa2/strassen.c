@@ -158,7 +158,7 @@ void transpose(int **m, int d){
 		for (j=i+1; j<d; j++){
 			tmp = m[i][j];
 			m[i][j] = m[j][i];
-			m[j][i] = tmp;
+			m[j][i] = 0;
 		}
 	}
 		print_matrix(d,m);
