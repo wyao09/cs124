@@ -151,18 +151,16 @@ void print_matrix(int n, int **m){
 
 /* transposes d by d square matrix m */ 
 void transpose(int **m, int d){
-	int i, j, tmp;
-		print_matrix(d,m);
-	printf("\n");
+	int i, j;
+	int tmp=0;
+
 	for (i=0; i<d; i++){
 		for (j=i+1; j<d; j++){
 			tmp = m[i][j];
 			m[i][j] = m[j][i];
-			m[j][i] = 0;
+			m[j][i] = tmp;
 		}
 	}
-		print_matrix(d,m);
-	printf("\n");
 }
 
 /* conventional matrix multiplication */
