@@ -72,17 +72,19 @@ int main(int argc, char **argv){
   	rand_matrix(dim,b);
   }
 
-  print_matrix(dim, a);
+  /*print_matrix(dim, a);
   printf("\n");
   print_matrix(dim, b);
-  printf("\n");
+  printf("\n");*/
 
-  if(opcode)
+  if(opcode == 1)
     strassen(a, b, c, dim_2);
+  else if (opcode == 2)
+  	transpose_conv(a,b,c,dim);
   else
     conventional(a, b, c, dim);
 
-  print_matrix(dim, c);
+  //print_matrix(dim, c);
 
   m_free(a, dim);
   m_free(b, dim);
@@ -146,6 +148,18 @@ void print_matrix(int n, int **m){
   return;
 }
 
+/* transposes d by d square matrix m */ 
+void transpose(int **m, int d){
+	int i, j, tmp;
+	for (i=0; i<d; i++){
+		for (j=0; j<d; j++){
+			tmp = m[i][j];
+			m[i][j] = m[j][i];
+			m[j][i] = tmp;
+		}
+	}
+}
+
 /* conventional matrix multiplication */
 // assumes square matrices
 void conventional(int **a, int **b, int **c, int d){
@@ -164,6 +178,22 @@ void conventional(int **a, int **b, int **c, int d){
       c[i][j] = tmp;
     }
   }
+}
+
+/* tranpose matrix multiplication to avoid cache misses */
+// assumes square matrices
+void transpose_conv(int **a, int **b, int **c, int d){
+	int i, j, k, tmp;
+	transpose(b,d);
+	
+	for (i=0; i<d; i++){
+		for (j=0; j<d; j++){
+    		tmp = 0;
+		    for (k=0; k<d; k++)
+				tmp += a[i][k] * b[j][k];
+      	c[i][j] = tmp;
+    	}
+  	}
 }
 
 // can be optimized?
