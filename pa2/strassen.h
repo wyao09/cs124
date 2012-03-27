@@ -10,6 +10,8 @@
 void rand_matrix(int n, int **m);
 void print_matrix(int n, int **m);
 void conventional(int **a, int **b, int **c, int d);
+void transpose(int **m, int d);
+void transpose_conv(int **a, int **b, int **c, int d);
 int **m_malloc(int dim);
 void m_free(int **m, int dim);
 
