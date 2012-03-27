@@ -22,7 +22,7 @@
 #define III 3
 #define IV 4
 #define INT 12
-#define CUTOFF 4
+#define CUTOFF 256
 
 int dimension = 1;
 
@@ -72,19 +72,20 @@ int main(int argc, char **argv){
   	rand_matrix(dim,b);
   }
 
-  /*print_matrix(dim, a);
+    
+  print_matrix(dim, a);
   printf("\n");
   print_matrix(dim, b);
-  printf("\n");*/
-
+  printf("\n");
+	
   if(opcode == 1)
     strassen(a, b, c, dim_2);
   else if (opcode == 2)
   	transpose_conv(a,b,c,dim);
   else
     conventional(a, b, c, dim);
-
-  //print_matrix(dim, c);
+    
+  print_matrix(dim, c);
 
   m_free(a, dim);
   m_free(b, dim);
@@ -151,13 +152,17 @@ void print_matrix(int n, int **m){
 /* transposes d by d square matrix m */ 
 void transpose(int **m, int d){
 	int i, j, tmp;
+		print_matrix(d,m);
+	printf("\n");
 	for (i=0; i<d; i++){
-		for (j=0; j<d; j++){
+		for (j=i+1; j<d; j++){
 			tmp = m[i][j];
 			m[i][j] = m[j][i];
 			m[j][i] = tmp;
 		}
 	}
+		print_matrix(d,m);
+	printf("\n");
 }
 
 /* conventional matrix multiplication */
@@ -184,6 +189,7 @@ void conventional(int **a, int **b, int **c, int d){
 // assumes square matrices
 void transpose_conv(int **a, int **b, int **c, int d){
 	int i, j, k, tmp;
+
 	transpose(b,d);
 	
 	for (i=0; i<d; i++){
@@ -267,7 +273,7 @@ void sub_m(int **a, int **b, int **c, int new_d, int mode){
 
 void strassen(int **a, int **b, int **c, int d){
   if (d <= CUTOFF){
-  	conventional(a,b,c,d);
+  	transpose_conv(a,b,c,d);
   	return;
   }
   else if (d == 1){
@@ -284,14 +290,14 @@ void strassen(int **a, int **b, int **c, int d){
   int **m1, **m2, **m3, **m4, **m5, **m6, **m7;
   int **t1, **t2;
 
-  a11 = m_malloc(new_dim);
+  /*a11 = m_malloc(new_dim);
   a12 = m_malloc(new_dim);
   a21 = m_malloc(new_dim);
   a22 = m_malloc(new_dim);
   b11 = m_malloc(new_dim);
   b12 = m_malloc(new_dim);
   b21 = m_malloc(new_dim);
-  b22 = m_malloc(new_dim); 
+  b22 = m_malloc(new_dim);*/
 
   m1 = m_malloc(new_dim);
   m2 = m_malloc(new_dim);
@@ -305,7 +311,7 @@ void strassen(int **a, int **b, int **c, int d){
 
   // dividing into 4 sub matrices
   // is it necessary to actually copy each entry?
-  for (i=0; i<new_dim; i++){
+  /*for (i=0; i<new_dim; i++){
     for (j=0; j<new_dim; j++){
       a11[i][j] = a[i][j];
       a12[i][j] = a[i][j + new_dim];
@@ -317,10 +323,25 @@ void strassen(int **a, int **b, int **c, int d){
       b21[i][j] = b[i + new_dim][j];
       b22[i][j] = b[i + new_dim][j + new_dim];
     }
-  }
-
-  // base case
-  // if (new_dem < x)
+  }*/
+  a11 = a;
+  a12 = a + new_dim*sizeof(int *);
+  a21 = a + d*new_dim*sizeof(int *);
+  a22 = a + new_dim*(d+1)*sizeof(int *);
+  
+  b11 = b;
+  b12 = b + new_dim*sizeof(int *);
+  b21 = b + d*new_dim*sizeof(int *);
+  b22 = b + new_dim*(d+1)*sizeof(int *);
+  
+  print_matrix(new_dim,a11);
+  printf("\n");
+  print_matrix(new_dim,a12);
+  printf("\n");
+  print_matrix(new_dim,a21);
+  printf("\n");
+  print_matrix(new_dim,a22);
+  printf("\n");
 
   /*
     m1 = (a11+a22)*(b11+b22)
@@ -376,14 +397,14 @@ void strassen(int **a, int **b, int **c, int d){
   sub_m(t2, m2, c, new_dim, IV);
 
   //free
-  m_free(a11, new_dim);
+  /*m_free(a11, new_dim);
   m_free(a12, new_dim);
   m_free(a21, new_dim);
   m_free(a22, new_dim);
   m_free(b11, new_dim);
   m_free(b12, new_dim);
   m_free(b21, new_dim);
-  m_free(b22, new_dim);
+  m_free(b22, new_dim);*/
 
   m_free(m1, new_dim);
   m_free(m2, new_dim);
