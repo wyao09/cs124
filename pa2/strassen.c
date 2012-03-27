@@ -22,7 +22,7 @@
 #define III 3
 #define IV 4
 #define INT 12
-#define CUTOFF 256
+#define CUTOFF 1
 
 int dimension = 1;
 
@@ -73,9 +73,9 @@ int main(int argc, char **argv){
   }
 
     
-  print_matrix(dim, a);
+  print_matrix(dim_2, a);
   printf("\n");
-  print_matrix(dim, b);
+  print_matrix(dim_2, b);
   printf("\n");
 	
   if(opcode == 1)
@@ -323,23 +323,31 @@ void strassen(int **a, int **b, int **c, int d){
     }
   }*/
   a11 = a;
-  a12 = a + new_dim*sizeof(int *);
-  a21 = a + d*new_dim*sizeof(int *);
-  a22 = a + new_dim*(d+1)*sizeof(int *);
+  a21 = &a[new_dim];
+  a12 = (int **)malloc(new_dim);
+  a22 = (int **)malloc(new_dim);
+  for (i=0; i<new_dim; i++)
+  	a12[i] = &a[i][new_dim];
+  for (i=0; i<new_dim; i++)
+  	a22[i] = &a[i+new_dim][new_dim];
   
   b11 = b;
-  b12 = b + new_dim*sizeof(int *);
-  b21 = b + d*new_dim*sizeof(int *);
-  b22 = b + new_dim*(d+1)*sizeof(int *);
+  b21 = &b[new_dim];
+  b12 = (int **)malloc(new_dim);
+  b22 = (int **)malloc(new_dim);
+  for (i=0; i<new_dim; i++)
+  	b12[i] = &b[i][new_dim];
+  for (i=0; i<new_dim; i++)
+  	b22[i] = &b[i+new_dim][new_dim];
   
-  print_matrix(new_dim,a11);
+  /*print_matrix(new_dim,a11);
   printf("\n");
   print_matrix(new_dim,a12);
   printf("\n");
   print_matrix(new_dim,a21);
   printf("\n");
   print_matrix(new_dim,a22);
-  printf("\n");
+  printf("\n");*/
 
   /*
     m1 = (a11+a22)*(b11+b22)
