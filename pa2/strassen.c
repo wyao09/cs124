@@ -22,13 +22,9 @@
 #define III 3
 #define IV 4
 #define INT 12
-#define CUTOFF 1000
+#define CUTOFF 4
 
-/*int pow_2[33] = {1,2,4,8,16,32,64,128,256,512,1024,2048,
-		 4096,8192,16384,32768,65536,131072,262144,
-		 524288,1048576,2097152,4194304,8388608,
-		 16777216,33554432,67108864,134217728,268435456,
-		 536870912,1073741824,2147483648,4294967296};*/
+int dimension = 1;
 
 int main(int argc, char **argv){
   if (argc != 4){
@@ -38,6 +34,7 @@ int main(int argc, char **argv){
 
   // commandline input
   int dim = atoi(argv[2]);
+  dimension = dim;
   int opcode = atoi(argv[1]);
 
   int **a, **b, **c;
@@ -239,7 +236,11 @@ void sub_m(int **a, int **b, int **c, int new_d, int mode){
 }
 
 void strassen(int **a, int **b, int **c, int d){
-  if (d == 1){
+  if (d <= CUTOFF){
+  	conventional(a,b,c,d);
+  	return;
+  }
+  else if (d == 1){
     c[0][0] = a[0][0] * b[0][0];
     return;
   }
@@ -261,10 +262,7 @@ void strassen(int **a, int **b, int **c, int d){
   b12 = m_malloc(new_dim);
   b21 = m_malloc(new_dim);
   b22 = m_malloc(new_dim); 
-  /*c11 = m_malloc(new_dim);
-  c12 = m_malloc(new_dim);
-  c21 = m_malloc(new_dim);
-  c22 = m_malloc(new_dim); */
+
   m1 = m_malloc(new_dim);
   m2 = m_malloc(new_dim);
   m3 = m_malloc(new_dim);
@@ -335,21 +333,6 @@ void strassen(int **a, int **b, int **c, int d){
     c22 = m1-m2+m3+m6
   */
 
-  // do we really need the sub c? cant we just place them in c directly?
-  /*  sum(m1, m4, t1, new_dim);
-  sum(t1, m7, t2, new_dim);
-  sub(t2, m5, c11, new_dim);
-
-  sum(m3, m5, c12, new_dim);
-
-  sum(m2, m4, c21, new_dim);
-  
-  sum(m1, m3, t1, new_dim);
-  sum(t1, m6, t2, new_dim);
-  sub(t2, m2, c22, new_dim);
-  */
-
-
   sum(m1, m4, t1, new_dim);
   sum(t1, m7, t2, new_dim);
   sub_m(t2, m5, c, new_dim, I);
@@ -362,21 +345,6 @@ void strassen(int **a, int **b, int **c, int d){
   sum(t1, m6, t2, new_dim);
   sub_m(t2, m2, c, new_dim, IV);
 
-
-  /*
-  // consolidate
-  for (i = 0; i < new_dim ; i++){
-    for (j = 0 ; j < new_dim ; j++){
-      c[i][j] = c11[i][j];
-      c[i][j + new_dim] = c12[i][j];
-      c[i + new_dim][j] = c21[i][j];
-      c[i + new_dim][j + new_dim] = c22[i][j];
-    }
-  }
-  */
-
-
-
   //free
   m_free(a11, new_dim);
   m_free(a12, new_dim);
@@ -386,10 +354,7 @@ void strassen(int **a, int **b, int **c, int d){
   m_free(b12, new_dim);
   m_free(b21, new_dim);
   m_free(b22, new_dim);
-  /*  m_free(c11, new_dim);
-  m_free(c12, new_dim);
-  m_free(c21, new_dim);
-  m_free(c22, new_dim);*/
+
   m_free(m1, new_dim);
   m_free(m2, new_dim);
   m_free(m3, new_dim);
