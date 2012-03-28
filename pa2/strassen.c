@@ -22,9 +22,9 @@
 #define III 3
 #define IV 4
 #define INT 12
-#define CUTOFF 256
 
 int dimension = 1;
+int CUTOFF = 256;
 
 int main(int argc, char **argv){
   if (argc != 4){
@@ -84,10 +84,16 @@ int main(int argc, char **argv){
   srand(t1.tv_usec * t1.tv_sec);
   gettimeofday(&t1,NULL);
   
-  if(opcode == 1)
+  if(opcode == 1){
+    //printf("Strassen's algorithm - %d\n",dim_2);
     strassen(a, b, c, dim_2);
+  }
   else if (opcode == 2)
   	transpose_conv(a,b,c,dim);
+  else if (opcode > 5){
+  	CUTOFF = opcode;
+  	strassen(a,b,c,dim_2);
+  }
   else
     conventional(a, b, c, dim);
 
