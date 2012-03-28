@@ -203,6 +203,9 @@ void transpose_conv(int **a, int **b, int **c, int d){
       	c[i][j] = tmp;
     	}
   	}
+  	//NOTE: As of now, restores b at end of function.
+  	//Should we instead make a copy of b then free it?
+  	transpose(b,d);
 }
 
 // can be optimized?
