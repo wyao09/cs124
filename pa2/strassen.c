@@ -22,7 +22,7 @@
 #define III 3
 #define IV 4
 #define INT 12
-#define CUTOFF 4
+#define CUTOFF 256
 
 int dimension = 1;
 
@@ -84,12 +84,8 @@ int main(int argc, char **argv){
   	transpose_conv(a,b,c,dim);
   else
     conventional(a, b, c, dim);
-    
-  printf("Strassen\n");
-  print_matrix(dim, c);
-  transpose_conv(a,b,c,dim);
-  printf("\n");
-  printf("Conventional\n");
+
+  printf("Result:\n");
   print_matrix(dim, c);
 
   m_free(a, dim);
@@ -296,13 +292,13 @@ void strassen(int **a, int **b, int **c, int d){
   int **m1, **m2, **m3, **m4, **m5, **m6, **m7;
   int **t1, **t2;
 
-  a11 = m_malloc(new_dim);
+  //a11 = m_malloc(new_dim);
   a12 = m_malloc(new_dim);
-  a21 = m_malloc(new_dim);
+  //a21 = m_malloc(new_dim);
   a22 = m_malloc(new_dim);
-  b11 = m_malloc(new_dim);
+  //b11 = m_malloc(new_dim);
   b12 = m_malloc(new_dim);
-  b21 = m_malloc(new_dim);
+  //b21 = m_malloc(new_dim);
   b22 = m_malloc(new_dim);
 
   m1 = m_malloc(new_dim);
@@ -319,35 +315,24 @@ void strassen(int **a, int **b, int **c, int d){
   // is it necessary to actually copy each entry?
   for (i=0; i<new_dim; i++){
     for (j=0; j<new_dim; j++){
-      a11[i][j] = a[i][j];
+      //a11[i][j] = a[i][j];
       a12[i][j] = a[i][j + new_dim];
-      a21[i][j] = a[i + new_dim][j];
+      //a21[i][j] = a[i + new_dim][j];
       a22[i][j] = a[i + new_dim][j + new_dim];
       
-      b11[i][j] = b[i][j];
+      //b11[i][j] = b[i][j];
       b12[i][j] = b[i][j + new_dim];
-      b21[i][j] = b[i + new_dim][j];
+      //b21[i][j] = b[i + new_dim][j];
       b22[i][j] = b[i + new_dim][j + new_dim];
     }
   }
-  /*
+  
   a11 = a;
   a21 = &a[new_dim]; 
-  a12 = (int **)malloc(new_dim);
-  a22 = (int **)malloc(new_dim);
-  for (i=0; i<new_dim; i++)
-  	a12[i] = &a[i][new_dim];
-  for (i=0; i<new_dim; i++)
-  	a22[i] = &a[i+new_dim][new_dim];
   
   b11 = b;
   b21 = &b[new_dim];
-  b12 = (int **)malloc(new_dim);
-  b22 = (int **)malloc(new_dim);
-  for (i=0; i<new_dim; i++)
-  	b12[i] = &b[i][new_dim];
-  for (i=0; i<new_dim; i++)
-  	b22[i] = &b[i+new_dim][new_dim];*/
+
   
   /*print_matrix(new_dim,a11);
   printf("\n");
@@ -413,13 +398,13 @@ void strassen(int **a, int **b, int **c, int d){
 
   //free
 
-  m_free(a11, new_dim);
+  //m_free(a11, new_dim);
   m_free(a12, new_dim);
-  m_free(a21, new_dim);
+  //m_free(a21, new_dim);
   m_free(a22, new_dim);
-  m_free(b11, new_dim);
+  //m_free(b11, new_dim);
   m_free(b12, new_dim);
-  m_free(b21, new_dim);
+  //m_free(b21, new_dim);
   m_free(b22, new_dim);
 
   m_free(m1, new_dim);
