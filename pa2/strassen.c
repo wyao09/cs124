@@ -73,11 +73,17 @@ int main(int argc, char **argv){
   }
 
     
-  print_matrix(dim, a);
+  /*print_matrix(dim, a);
   printf("\n");
   print_matrix(dim, b);
-  printf("\n");
+  printf("\n");*/
 	
+  struct timeval t1, t2;
+  int time;
+    
+  srand(t1.tv_usec * t1.tv_sec);
+  gettimeofday(&t1,NULL);
+  
   if(opcode == 1)
     strassen(a, b, c, dim_2);
   else if (opcode == 2)
@@ -85,8 +91,12 @@ int main(int argc, char **argv){
   else
     conventional(a, b, c, dim);
 
-  printf("Result:\n");
-  print_matrix(dim, c);
+  gettimeofday(&t2,NULL);
+  time = (pow(10,6)*t2.tv_sec + t2.tv_usec) - (pow(10,6)*t1.tv_sec + t1.tv_usec);
+  printf("%d\n",time);
+  
+  /*printf("Result:\n");
+  print_matrix(dim, c);*/
 
   m_free(a, dim);
   m_free(b, dim);
