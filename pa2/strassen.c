@@ -328,7 +328,6 @@ void strassen(int **a, int **b, int **c, int d){
   t2 = m_malloc(new_dim);
 
   // dividing into 4 sub matrices
-  // is it necessary to actually copy each entry?
   for (i=0; i<new_dim; i++){
     for (j=0; j<new_dim; j++){
       //a11[i][j] = a[i][j];
