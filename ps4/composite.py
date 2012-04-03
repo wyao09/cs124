@@ -3,6 +3,11 @@ import sys
 import random
 from mpmath import mp
 
+if len(sys.argv) != 3:
+    print "usage: composite [odd integer to be tested] [parameter for accuracy]"
+    print "output with n-1 as 2^s * d: (witness, s, d)"
+    sys.exit()
+
 n = int(sys.argv[1]) # odd integer to be tested for primality
 """
 s = int(sys.argv[2]) # n-1 as 2^s*d
