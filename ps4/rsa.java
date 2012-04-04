@@ -10,7 +10,13 @@ public class rsa{
 	    a += j;
 	}
 	System.out.println(a);
-	
+
+  BigInteger n = new BigInteger(a);
+
+	a =	n.toString(2);
+
+	System.out.println(a);
+
 	BigInteger key1 = new BigInteger ("46947848749720430529628739081");
 	BigInteger key2 = new BigInteger ("37267486263679235062064536973");
 	BigInteger x = new BigInteger(a);
