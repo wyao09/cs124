@@ -26,11 +26,7 @@ def test_prime(n):
         return True
  
     for i in range(trials):
-        if 100 > n:
-            u = n
-        else:
-            u = 100
-        a = random.randrange(2, u)
+        a = random.randrange(2, n)
         if composite(a):
             return False
  

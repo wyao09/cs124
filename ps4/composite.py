@@ -26,15 +26,23 @@ for i in range(0, 30):
 
 def composite():
     for i in range(0, k):
-        a = random.randint(2,n-2)
+        a = random.randint(2,100)#n-2)
         x = mp.fmod(mp.power(a,d),n)
         if x != 1 and x != n-1:#
-            for r in range(i, s):
+            comp = True
+            for r in range(1, s):
                 x = mp.fmod(mp.power(x,2),n)
                 if x == 1:#
-                    return a, s, d
-                if x != n-1:#
-                    return a, s, d
+                    return a, s, d, r
+                if x == n-1:#
+                    comp = False
+                    break
+                """
+            if comp:    
+                return a, s, d
+            else:
+                print 'ha'
+                """
     return -1, s, d
     
 print composite()
